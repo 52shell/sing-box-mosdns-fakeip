@@ -27,7 +27,7 @@
     sleep 1
     mkdir /etc/mosdns
     cd /etc/mosdns
-    wget -O mosdns.zip https://file.herozmy.com/File/script/mosdns-p.zip
+    wget -O mosdns.zip https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.zip
     unzip mosdns.zip
     echo "配置mosdns"
     sed -i "s/- addr: 10.10.10.147:6666/- addr: ${uiport}/g" /etc/mosdns/config.yaml
