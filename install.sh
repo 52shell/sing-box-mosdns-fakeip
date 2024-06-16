@@ -52,7 +52,7 @@ bash hy2-gohome.sh >/dev/null 2>&1
     6)
 wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/clash.sh >/dev/null 2>&1
 bash clash.sh >/dev/null 2>&1
-        
+        ;;
     *)
         echo "无效的选项，请重新运行脚本并选择有效的选项."
         ;;
