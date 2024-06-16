@@ -30,27 +30,27 @@ echo "6. mihomo (clash meta)"
 read choice
 case $choice in
     1)
-wget https://file.herozmy.com/File/script/install-sing-box.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box.sh >/dev/null 2>&1
 bash install-sing-box.sh >/dev/null 2>&1
         ;;
     2)
-wget https://file.herozmy.com/File/script/mosdns-o.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.sh >/dev/null 2>&1
 bash mosdns-o.sh >/dev/null 2>&1
         ;;
     3)
-wget https://file.herozmy.com/File/script/install-sing-box-p.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box-p.sh >/dev/null 2>&1
 bash install-sing-box-p.sh >/dev/null 2>&1
         ;;
     4)
-wget https://file.herozmy.com/File/script/mosdns-p.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
 bash mosdns-p.sh >/dev/null 2>&1
         ;;
     5)
-wget https://file.herozmy.com/File/script/hy2-gohome.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/hy2-gohome.sh >/dev/null 2>&1
 bash hy2-gohome.sh >/dev/null 2>&1
         ;;
     6)
-wget https://file.herozmy.com/File/script/clash.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/clash.sh >/dev/null 2>&1
 bash clash.sh >/dev/null 2>&1
         
     *)
