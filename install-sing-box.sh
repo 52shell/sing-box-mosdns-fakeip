@@ -89,9 +89,9 @@ install_config() {
     # 如果用户没有输入选择，则默认为1
     choice=${choice:-1}
     if [ $choice -eq 1 ]; then
-        json_file="&file=https://file.herozmy.com/File/sing-box/config_json/tproxy.json"
+        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
     elif [ $choice -eq 2 ]; then
-        json_file="&file=https://file.herozmy.com/File/sing-box/config_json/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
     else
         echo "无效的选择。"
         return 1
