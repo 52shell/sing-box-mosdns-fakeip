@@ -1,5 +1,13 @@
-
-    mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.1/mosdns-linux-amd64.zip"
+    if [[ $(uname -m) == "aarch64" ]]; then
+        arch="arm64"
+    elif [[ $(uname -m) == "x86_64" ]]; then
+        arch="amd64"
+    else
+        arch="未知"
+        exit 0
+    fi
+    echo "系统架构是：$arch"
+    mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.1/mosdns-linux-$arch.zip"
     apt update && apt -y upgrade || { echo "更新失败！退出脚本"; exit 1; }
     apt install curl wget tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
     echo -e "\n设置时区为Asia/Shanghai"
@@ -8,7 +16,7 @@
     echo "开始下载 mosdns"
     wget "${mosdns_host}" || { echo -e "\e[31m下载失败！退出脚本\e[0m"; exit 1; }
     echo "开始解压"
-    unzip ./mosdns-linux-amd64.zip 
+    unzip ./mosdns-linux-$arch.zip 
     echo "复制 mosdns 到 /usr/bin"
     sleep 1
     cp -rv ./mosdns /usr/bin
