@@ -192,7 +192,7 @@ install_config() {
             "tag": "机场",
             "healthcheck_url": "http://www.gstatic.com/generate_204",
             "healthcheck_interval": "10m0s",
-            "download_url": "https://www.okjc.one/api/v1/client/subscribe?token=306fb53a4301a4984f8293463af92494",
+            "download_url": "$suburl",
             "download_ua": "clash.meta",
             "download_interval": "24h0m0s",
             "download_detour": "direct"
