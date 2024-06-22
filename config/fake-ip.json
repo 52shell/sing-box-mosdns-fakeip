@@ -419,7 +419,7 @@
       {
         "rule_set": ["geoip-cn", "geosite-cn"],
         "outbound": "China"
-      }
+      },
       {
         "rule_set": "geosite-openai",
         "outbound": "OpenAI"
