@@ -1,7 +1,23 @@
 #!/bin/bash
 # check root执行
 [[ $EUID -ne 0 ]] && echo -e "${red}错误：${plain} 必须使用root用户运行此脚本！\n" && exit 1
-
+show_status() {
+    check_sing-box_status
+    case $? in
+    0)
+        echo -e "sing-box: 已运行"
+        show_enable_status
+        ;;
+    1)
+        echo -e "sing-box: 未运行"
+        show_enable_status
+        ;;
+    2)
+        echo -e "sing-box: 未安装"
+        ;;
+    esac
+  check_mosdns_status
+}
 show_menu() {
     echo -e "
    面板管理脚本
