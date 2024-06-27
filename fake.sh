@@ -16,7 +16,7 @@ show_status() {
         echo -e "sing-box: 未安装"
         ;;
     esac
-  check_mosdns_status
+  
 }
 show_menu() {
     echo -e "
