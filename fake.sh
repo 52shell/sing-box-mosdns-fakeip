@@ -18,7 +18,7 @@ show_status() {
     esac
   
 }
-show_menu() {
+show_menu_singbox() {
     echo -e "
    面板管理脚本
   0. 退出脚本
@@ -28,11 +28,6 @@ show_menu() {
   3. 更新 Puer-sing-box核心
   4. 卸载 sing-box
   5. 清理 sing-box缓存
-————————————————
-  6. 安装 mosdns
-  7. 卸载 mosdns
-  8. 更新 mosdns表地址
-  9. 清理 mosdns缓存
  "
     show_status
     echo && read -p "请输入选择 [0-16]: " num
