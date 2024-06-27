@@ -24,6 +24,14 @@ checkcore() {
     fi
 }
 
+checksingbox() {
+    if [[ $singboox_core == "sing-box" ]]; then
+        show_menu_singbox
+    elif [[ $singboox_core == "sing-box-p" ]]; then
+        show_menu_mosdns
+    fi
+}
+
 show_status() {
     check_status
     case $? in
@@ -59,7 +67,7 @@ check_install() {
         echo ""
         echo "请先安装$system"
         if [[ $# == 0 ]]; then
-           wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box.sh && bash install-sing-box.sh
+           wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install.sh && bash install.sh
         fi
         return 1
     else
@@ -67,13 +75,28 @@ check_install() {
     fi
 }
 
+
 check_uninstall() {
     check_status
     if [[ $? != 2 ]]; then
         echo ""
-        echo "$system已安装，请不要重复安装"
+        echo "$system已安装，即将安装最新版本内核"
         if [[ $# == 0 ]]; then
-            wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box.sh && bash install-sing-box.sh
+            install_singbox
+        fi
+        return 1
+    else
+        return 0
+    fi
+}
+
+check_uninstall_p() {
+    check_status
+    if [[ $? != 2 ]]; then
+        echo ""
+        echo "$system已安装，即将安装最新版本内核"
+        if [[ $# == 0 ]]; then
+            install_singbox_p
         fi
         return 1
     else
@@ -82,7 +105,7 @@ check_uninstall() {
 }
 
 install_singbox() {
-check_uninstall
+
     echo -e "编译Sing-Box 最新版本"
     sleep 1
     apt -y install curl git build-essential libssl-dev libevent-dev zlib1g-dev gcc-mingw-w64
@@ -173,13 +196,25 @@ install_singbox_p() {
     fi
 }
 
-uninstall_singbox() {
+del_singbox() {
     echo "开始卸载sing-box核心程序及其相关配置文件"
-    echo "卸载sing-box自启动"
-    systemctl disable sing-box
     echo "关闭sing-box"
     systemctl stop sing-box
+    echo "卸载sing-box自启动"
+    systemctl disable sing-box
+    echo "关闭nftables防火墙规则"
+    systemctl stop nftables
+    echo "nftables防火墙规则"
+    systemctl disable nftables
+    echo "关闭sing-box路由规则"
+    systemctl stop sing-box-router
+    echo "卸载sing-box路由规则"
+    systemctl disable sing-box-router
+
+
     echo "删除相关配置文件"
+    rm -rf /etc/systemd/system/sing-box*
+
     rm -rf /etc/sing-box
     rm -f /usr/local/bin/sing-box
     echo "卸载完成"
@@ -217,16 +252,16 @@ show_status
         exit 0
         ;;
     1)
-        check_install && install_singbox
+        check_uninstall && install_singbox
         ;;
     2)
-        check_install && install_singbox_p
+        check_uninstall_p && install_singbox_p
         ;;
     3)
-        check_install && uninstall_singbox
+        del_singbox
         ;;
     4)
-        check_install && del_cache
+        del_cache
         ;;
     5)
         check_install && toggle_service
