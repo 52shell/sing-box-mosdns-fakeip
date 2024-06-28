@@ -303,7 +303,7 @@ show_menu_mosdns() {
    面板管理脚本
   0. 退出脚本
 ————————————————
-  1. 重新安装mosdns
+  1. 更新 mosdns 远程规则
   2. 卸载 mosdns
   3. 清理 mosdns 缓存
   4. 重新启动 mosdns 
