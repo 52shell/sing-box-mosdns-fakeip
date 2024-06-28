@@ -40,7 +40,6 @@ done
 
 checkcore() {
     if [[ $system == "sing-box" ]]; then
-        checksingbox_core
         show_menu_singbox
     elif [[ $system == "mosdns" ]]; then
         show_menu_mosdns
