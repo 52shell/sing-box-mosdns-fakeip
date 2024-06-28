@@ -356,6 +356,10 @@ while true; do
     elif [[ $choice -eq 2 ]]; then
         system="mosdns"
         break
+    elif [[ $choice -eq 3 ]]; then
+        rm -rf /usr/bin/fake
+        wget -O /usr/bin/fake https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake.sh
+        break
     elif [[ $choice -eq 0 ]]; then
         echo "退出脚本"
         exit 0
