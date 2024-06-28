@@ -21,7 +21,6 @@ checksingbox_core(){
 ————————————————
   1. sing-box 官方核心
   2. sing-box puer核心
-  0. 退出脚本
  "
 while true; do
     read -p "请输入选择 (1 或 2): " choice
