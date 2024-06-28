@@ -265,7 +265,7 @@ show_status
         exit 0
         ;;
     1)
-        check_uninstall && install_singbox
+        checksingbox_core
         ;;
     2)
         check_uninstall_p && install_singbox_p
