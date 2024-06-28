@@ -253,11 +253,10 @@ show_menu_singbox() {
    面板管理脚本
   0. 退出脚本
 ————————————————
-  1. 安装/更新 sing-box
-  2. 安装/更新 Puer-sing-box核心
-  3. 卸载 sing-box
-  4. 清理 sing-box缓存
-  5. 更新官核节点配置 
+  1. 安装/更新 sing-box | sing-box-puer核心
+  2. 卸载 sing-box
+  3. 清理 sing-box缓存
+  4. 更新官核节点配置 
  "
 show_status
     echo && read -p "请输入选择 [0-5]: " num
