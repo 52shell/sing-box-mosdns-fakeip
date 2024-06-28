@@ -308,7 +308,7 @@ show_menu_mosdns() {
   3. 清理 mosdns 缓存
   4. 重新启动 mosdns 
  "
-show_status
+    show_status
     echo && read -p "请输入选择 [0-6]: " num
 
     case "${num}" in
