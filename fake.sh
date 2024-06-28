@@ -41,14 +41,6 @@ checkcore() {
     fi
 }
 
-checksingbox() {
-    if [[ $singboox_core == "sing-box" ]]; then
-        show_menu_singbox
-    elif [[ $singboox_core == "sing-box-p" ]]; then
-        show_menu_mosdns
-    fi
-}
-
 show_status() {
     check_status
     case $? in
