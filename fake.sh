@@ -23,22 +23,14 @@ checksingbox_core(){
   2. sing-box puer核心
   0. 退出脚本
  "
-    echo && read -p "请输入选择 [0-6]: " num
-
-    case "${num}" in
-    0)
-        exit 0
-        ;;
-    1)
-        check_uninstall && install_mosdns
-        ;;
-    2)
-        check_install && update_mosdns
-        ;;
-    *)
-        echo "请输入正确的数字 [0-6]"
-        ;;
-    esac
+  if [[ $choice == 1 ]]; then
+    singbox_core="singbox"
+elif [[ $choice == 2 ]]; then
+    singbox_core="sing-box-p"
+else
+    echo "无效选择"
+    # 在这里可以选择退出函数或者采取其他的处理措施
+fi
   }
 
 checkcore() {
