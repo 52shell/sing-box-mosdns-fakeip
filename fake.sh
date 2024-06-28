@@ -226,6 +226,7 @@ del_cache() {
     rm -rf /etc/sing-box/cache.db
     echo "sing-box缓存清理完成"
     systemctl start sing-box
+    echo "sing-box启动"
 }
 
 before_show_menu() {
@@ -254,19 +255,16 @@ show_status
         checksingbox_core
         ;;
     2)
-        check_uninstall_p && install_singbox_p
-        ;;
-    3)
         del_singbox
         ;;
-    4)
+    3)
         del_cache
         ;;
-    5)
-        check_install && toggle_service
+    4)
+        sub_config
         ;;
     *)
-        echo "请输入正确的数字 [0-5]"
+        echo "请输入正确的数字 [0-4]"
         ;;
     esac
 }
