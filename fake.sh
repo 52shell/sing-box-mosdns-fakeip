@@ -315,60 +315,33 @@ show_menu_mosdns() {
         exit 0
         ;;
     1)
-        check_uninstall && install_mosdns
+        updata_mosdns_rule
         ;;
     2)
-        check_install && update_mosdns
+        del_mosdns
         ;;
     3)
-        check_install && uninstall_mosdns
+        del_mosdns_cache
         ;;
     4)
-        check_install && reset_mosdns_cache
-        ;;
-    5)
-        check_install && toggle_service_mosdns
+        systemctl restart mosdns
         ;;
     *)
-        echo "请输入正确的数字 [0-6]"
+        echo "请输入正确的数字 [0-5]"
         ;;
     esac
 }
 
-toggle_service() {
-    if systemctl is-active --quiet sing-box; then
-        systemctl stop sing-box
-        echo "sing-box 已停止"
-    else
-        systemctl start sing-box
-        echo "sing-box 已启动"
-    fi
-}
-
-install_mosdns() {
+updata_mosdns_rule() {
     echo "安装mosdns的代码未提供"
 }
 
-update_mosdns() {
+del_mosdns() {
     echo "更新mosdns的代码未提供"
 }
 
-uninstall_mosdns() {
+del_mosdns_cache() {
     echo "卸载mosdns的代码未提供"
-}
-
-reset_mosdns_cache() {
-    echo "重置mosdns缓存的代码未提供"
-}
-
-toggle_service_mosdns() {
-    if systemctl is-active --quiet mosdns; then
-        systemctl stop mosdns
-        echo "mosdns 已停止"
-    else
-        systemctl start mosdns
-        echo "mosdns 已启动"
-    fi
 }
 
 system=""
