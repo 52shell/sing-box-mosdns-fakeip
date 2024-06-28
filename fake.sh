@@ -14,7 +14,15 @@ prompt_user() {
  "
 }
 
-
+checksingbox_core(){
+    echo -e "
+   请选择sing-box核心
+————————————————
+  1. sing-box 官方核心
+  2. sing-box puer核心
+  0. 退出脚本
+ "
+  }
 
 checkcore() {
     if [[ $system == "sing-box" ]]; then
