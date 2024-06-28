@@ -228,7 +228,32 @@ del_cache() {
     systemctl start sing-box
     echo "sing-box启动"
 }
-
+sub_config(){
+  sub_host="https://sub-singbox.herozmy.com"
+    echo "请选择："
+    echo "1. tproxy_fake_ip O大原版 <适用机场多规则分流>"
+    echo "2. tproxy_fake_ip O大原版 <适用VPS自建模式>"
+    read -p "请输入选项 [默认: 1]: " choice
+    # 如果用户没有输入选择，则默认为1
+    choice=${choice:-1}
+    if [ $choice -eq 1 ]; then
+        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/tproxy.json"
+    elif [ $choice -eq 2 ]; then
+        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
+    else
+        echo "无效的选择。"
+        return 1
+    fi
+    curl -o config.json "${sub_host}/config/${suburl}${json_file}"    
+    # 检查下载是否成功
+    if [ $? -eq 0 ]; then
+        # 移动文件到目标位置
+        mv config.json /etc/sing-box/config.json
+        echo "Sing-box配置文件写入成功！"
+    else
+        echo "下载文件失败，请检查网络连接或者URL是否正确。"
+    fi    
+  }
 before_show_menu() {
     echo && echo -n -e "按回车返回主菜单: " && read temp
     checkcore
