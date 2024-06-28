@@ -27,10 +27,10 @@ while true; do
     read -p "请输入选择 (1 或 2): " choice
     
     if [[ $choice == 1 ]]; then
-        install_singbox
+        check_uninstall && install_singbox
         break
     elif [[ $choice == 2 ]]; then
-        install_singbox_p
+        check_uninstall && install_singbox_p
         break
     else
         echo "无效选择，请重新输入。"
