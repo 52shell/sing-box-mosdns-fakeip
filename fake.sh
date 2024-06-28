@@ -242,7 +242,7 @@ show_menu_singbox() {
   2. 安装/更新 Puer-sing-box核心
   3. 卸载 sing-box
   4. 清理 sing-box缓存
-  5. 启动/停止 sing-box 
+  5. 更新官核节点配置 
  "
 show_status
     echo && read -p "请输入选择 [0-5]: " num
