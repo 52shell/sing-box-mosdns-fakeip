@@ -251,11 +251,12 @@ sub_config(){
     # 检查下载是否成功
     if [ $? -eq 0 ]; then
         # 移动文件到目标位置
-        mv config.json /etc/sing-box/config.json
+        mv config.json /etc/sing-box/config.json >/dev/null 2>&1
         echo "Sing-box配置文件写入成功！"
+        echo "如config.json内容为空，则说明订阅问题，请重新输入订阅连接。"
     else
         echo "下载文件失败，请检查网络连接或者URL是否正确。"
-    fi    
+    fi
   }
 before_show_menu() {
     echo && echo -n -e "按回车返回主菜单: " && read temp
