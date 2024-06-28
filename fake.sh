@@ -74,21 +74,6 @@ check_status() {
     fi
 }
 
-check_install() {
-    check_status
-    if [[ $? == 2 ]]; then
-        echo ""
-        echo "请先安装$system"
-        if [[ $# == 0 ]]; then
-           wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install.sh && bash install.sh
-        fi
-        return 1
-    else
-        return 0
-    fi
-}
-
-
 check_uninstall() {
     check_status
     if [[ $? != 2 ]]; then
