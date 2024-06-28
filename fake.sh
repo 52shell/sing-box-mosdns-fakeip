@@ -27,11 +27,9 @@ while true; do
     read -p "请输入选择 (1 或 2): " choice
     
     if [[ $choice == 1 ]]; then
-        singbox_core="singbox"
         install_singbox
         break
     elif [[ $choice == 2 ]]; then
-        singbox_core="sing-box-p"
         install_singbox_p
         break
     else
