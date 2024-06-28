@@ -303,10 +303,10 @@ show_menu_mosdns() {
    面板管理脚本
   0. 退出脚本
 ————————————————
-  1. 安装mosdns
-  4. 卸载 mosdns
-  5. 清理 mosdns 缓存
-  6. 启动 sing-box 
+  1. 重新安装mosdns
+  2. 卸载 mosdns
+  3. 清理 mosdns 缓存
+  4. 重新启动 mosdns 
  "
     echo && read -p "请输入选择 [0-6]: " num
 
