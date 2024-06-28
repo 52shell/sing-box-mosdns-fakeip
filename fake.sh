@@ -28,9 +28,11 @@ while true; do
     
     if [[ $choice == 1 ]]; then
         singbox_core="singbox"
+        install_singbox
         break
     elif [[ $choice == 2 ]]; then
         singbox_core="sing-box-p"
+        install_singbox_p
         break
     else
         echo "无效选择，请重新输入。"
