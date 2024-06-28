@@ -12,6 +12,7 @@ prompt_user() {
   2. mosdns
   0. 退出脚本
  "
+
 }
 
 checksingbox_core(){
@@ -22,6 +23,22 @@ checksingbox_core(){
   2. sing-box puer核心
   0. 退出脚本
  "
+    echo && read -p "请输入选择 [0-6]: " num
+
+    case "${num}" in
+    0)
+        exit 0
+        ;;
+    1)
+        check_uninstall && install_mosdns
+        ;;
+    2)
+        check_install && update_mosdns
+        ;;
+    *)
+        echo "请输入正确的数字 [0-6]"
+        ;;
+    esac
   }
 
 checkcore() {
