@@ -23,18 +23,24 @@ checksingbox_core(){
   2. sing-box puer核心
   0. 退出脚本
  "
-  if [[ $choice == 1 ]]; then
-    singbox_core="singbox"
-elif [[ $choice == 2 ]]; then
-    singbox_core="sing-box-p"
-else
-    echo "无效选择"
-    # 在这里可以选择退出函数或者采取其他的处理措施
-fi
+while true; do
+    read -p "请输入选择 (1 或 2): " choice
+    
+    if [[ $choice == 1 ]]; then
+        singbox_core="singbox"
+        break
+    elif [[ $choice == 2 ]]; then
+        singbox_core="sing-box-p"
+        break
+    else
+        echo "无效选择，请重新输入。"
+    fi
+done
   }
 
 checkcore() {
     if [[ $system == "sing-box" ]]; then
+        checksingbox_core
         show_menu_singbox
     elif [[ $system == "mosdns" ]]; then
         show_menu_mosdns
