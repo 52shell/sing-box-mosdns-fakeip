@@ -230,6 +230,9 @@ del_cache() {
 }
 sub_config(){
   sub_host="https://sub-singbox.herozmy.com"
+    read -p "输入订阅连接：" suburl
+    suburl="${suburl:-https://}"
+    echo "已设置订阅连接地址：$suburl"
     echo "请选择："
     echo "1. tproxy_fake_ip O大原版 <适用机场多规则分流>"
     echo "2. tproxy_fake_ip O大原版 <适用VPS自建模式>"
