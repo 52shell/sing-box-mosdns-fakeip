@@ -512,10 +512,13 @@ install_config() {
          "includes": "(?i)德国|DE|brd|germany|荷兰|NL|Netherlands|法国|FR|France|French Republic|澳大利亚|AU|Australia|迪拜|UAE|Dubai|印度|IN|India|KR|Korea|KOR|首尔|韩|韓|英国|UnitedKingdom|UK|英|瑞典|Sweden|SE|巴西|Brazil|BR|非洲|Africa|AF"
       }
     ],
-    "route": {
-     "final": "🐟 漏网之鱼",
-     "auto_detect_interface": true,
-     "default_mark": 1,
+  "route": {
+      "final": "🐟 漏网之鱼",
+      "auto_detect_interface": true,
+      "stop_always_resolve_udp": false,
+      "concurrent_dial": true,
+      "keep_alive_period": "15s"
+      "default_mark": 1,
       "rules": [
 
       {
