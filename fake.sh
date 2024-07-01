@@ -240,7 +240,7 @@ sub_config(){
     # 如果用户没有输入选择，则默认为1
     choice=${choice:-1}
     if [ $choice -eq 1 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/tproxy.json"
+        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/config/fake-ip.json"
     elif [ $choice -eq 2 ]; then
         json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
     else
