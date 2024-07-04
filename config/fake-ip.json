@@ -418,11 +418,19 @@
       },
       {
         "rule_set": [
-          "geoip-cn",
+
           "geosite-cn"
         ],
         "outbound": "China"
       },
+      {
+       "rule_set": "geosite-category-games",
+        "outbound": "Games"
+      },
+	    {
+        "rule_set": "geoip-cn",
+        "outbound": "China"
+        },
       {
         "rule_set": "geosite-openai",
         "outbound": "OpenAI"
@@ -498,10 +506,6 @@
       {
         "rule_set": "geosite-microsoft",
         "outbound": "Microsoft"
-      },
-      {
-        "rule_set": "geosite-category-games",
-        "outbound": "Games"
       },
       {
         "rule_set": [
