@@ -78,6 +78,18 @@
         "auto",
         "自建节点",
         "direct",
+        "HongKong",
+        "TaiWan",
+        "Singapore",
+        "Japan",
+        "America",
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others",
         "{all}"
       ]
     },
@@ -90,7 +102,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "America"
     },
@@ -104,7 +122,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "HongKong"
     },
@@ -118,7 +142,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "HongKong"
     },
@@ -132,7 +162,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "自建节点"
     },
@@ -146,7 +182,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "自建节点"
     },
@@ -179,7 +221,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "America"
     },
@@ -192,7 +240,13 @@
         "TaiWan",
         "Singapore",
         "Japan",
-        "America"
+        "America",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "Japan"
     },
@@ -206,7 +260,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "HongKong"
     },
@@ -220,7 +280,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ],
       "default": "HongKong"
     },
@@ -235,7 +301,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ]
     },
     {
@@ -249,7 +321,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ]
     },
     {
@@ -263,7 +341,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ]
     },
     {
@@ -276,7 +360,13 @@
         "Singapore",
         "Japan",
         "America",
-        "Others"
+        "Others",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ]
     },
     {
@@ -290,7 +380,13 @@
         "Japan",
         "America",
         "Others",
-        "direct"
+        "direct",
+        "手动-HongKong",
+        "手动-TaiWan",
+        "手动-Singapore",
+        "手动-Japan",
+        "手动-America",
+        "手动-Others"
       ]
     },
     {
@@ -311,7 +407,7 @@
     },
     {
       "tag":"HongKong",
-      "type":"selector",
+      "type":"urltest",
       "outbounds":[
         "{all}"
       ],
@@ -321,7 +417,7 @@
     },
     {
       "tag":"TaiWan",
-      "type":"selector",
+      "type":"urltest",
       "outbounds":[
         "{all}"
       ],
@@ -331,7 +427,7 @@
     },
     {
       "tag":"Singapore",
-      "type":"selector",
+      "type":"urltest",
       "outbounds":[
         "{all}"
       ],
@@ -341,7 +437,7 @@
     },
     {
       "tag":"Japan",
-      "type":"selector",
+      "type":"urltest",
       "outbounds":[
         "{all}"
       ],
@@ -351,7 +447,7 @@
     },
     {
       "tag":"America",
-      "type":"selector",
+      "type":"urltest",
       "outbounds":[
         "{all}"
       ],
@@ -361,6 +457,66 @@
     },
     {
       "tag":"Others",
+      "type":"urltest",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"exclude","keywords":["🇭🇰|HK|hk|香港|香|🇹🇼|TW|tw|台湾|台|🇸🇬|SG|sg|新加坡|狮|🇯🇵|JP|jp|日本|日|🇺🇸|US|us|美国|美"]}
+      ]
+    },
+    {
+      "tag":"手动-HongKong",
+      "type":"selector",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"include","keywords":["🇭🇰|HK|hk|香港|港|HongKong"]}
+      ]
+    },
+    {
+      "tag":"手动-TaiWan",
+      "type":"selector",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"include","keywords":["🇹🇼|TW|tw|台湾|臺灣|台|Taiwan"]}
+      ]
+    },
+    {
+      "tag":"手动-Singapore",
+      "type":"urltest",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"include","keywords":["🇸🇬|SG|sg|新加坡|狮|Singapore"]}
+      ]
+    },
+    {
+      "tag":"手动-Japan",
+      "type":"selector",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"include","keywords":["🇯🇵|JP|jp|日本|日|Japan"]}
+      ]
+    },
+    {
+      "tag":"手动-America",
+      "type":"selector",
+      "outbounds":[
+        "{all}"
+      ],
+      "filter":[
+        {"action":"include","keywords":["🇺🇸|US|us|美国|美|United States"]}
+      ]
+    },
+    {
+      "tag":"手动-Others",
       "type":"selector",
       "outbounds":[
         "{all}"
