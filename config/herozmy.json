@@ -105,7 +105,8 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "HongKong"
     },
     {
       "tag":"Telegram",
@@ -118,7 +119,8 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "HongKong"
     },
     {
       "tag":"Twitter",
@@ -131,7 +133,8 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "自建节点"
     },
     {
       "tag":"Facebook",
@@ -144,7 +147,8 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "自建节点"
     },
     {
       "tag":"BiliBili",
@@ -162,7 +166,8 @@
         "自建节点",
         "TaiWan",
         "Proxy"
-      ]
+      ],
+      "default": "TaiWan"
     },
     {
       "tag":"Spotify",
@@ -202,7 +207,8 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "HongKong"
     },
     {
       "tag":"Disney+",
@@ -215,14 +221,15 @@
         "Japan",
         "America",
         "Others"
-      ]
+      ],
+      "default": "HongKong"
     },
     {
       "tag":"Apple",
       "type":"selector",
       "outbounds":[
-        "自建节点",
         "direct",
+	"自建节点",
         "HongKong",
         "TaiWan",
         "Singapore",
@@ -235,8 +242,8 @@
       "tag":"Microsoft",
       "type":"selector",
       "outbounds":[
-        "自建节点",
         "direct",
+	"自建节点",
         "HongKong",
         "TaiWan",
         "Singapore",
@@ -249,8 +256,8 @@
       "tag":"Games",
       "type":"selector",
       "outbounds":[
-        "自建节点",
         "direct",
+	"自建节点",
         "HongKong",
         "TaiWan",
         "Singapore",
@@ -263,8 +270,8 @@
       "tag":"Streaming",
       "type":"selector",
       "outbounds":[
-        "自建节点",
         "HongKong",
+        "自建节点",
         "TaiWan",
         "Singapore",
         "Japan",
