@@ -41,6 +41,15 @@
     sleep 1
     systemctl restart mosdns
     sleep 2
+    echo "是否安装 mosdns webui y/n"
+    read choice
+    if [ "$choice" = "y" ]; then
+    install_ui
+elif [ "$choice" = "n" ]; then
+    install_over
+fi
+
+install_over(){   
 echo "=================================================================="
 echo -e "\t\t\Mosdns fake安装完成"
 echo -e "\t\t\tPowered by www.herozmy.com 2024"
@@ -48,3 +57,68 @@ echo -e "\n"
 echo -e "温馨提示:\nMosdns网关自行配置为sing-box，dns随意"
 echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
 echo "=================================================================="
+}
+
+install_ui(){
+
+wget -O /root/loki_3.1.0_amd64.deb https://github.com/grafana/loki/releases/download/v3.1.0/loki_3.1.0_amd64.deb
+
+dpkg -i loki_3.1.0_amd64.deb    
+
+# 安装必需的软件包
+apt-get install -y adduser libfontconfig1 musl
+
+# 下载并安装 Grafana Enterprise
+wget -O /root/grafana-enterprise_11.0.0_amd64.deb https://dl.grafana.com/enterprise/release/grafana-enterprise_11.0.0_amd64.deb
+dpkg -i grafana-enterprise_11.0.0_amd64.deb
+
+# 重新加载 systemd 并启用/启动 Grafana 服务器
+systemctl daemon-reload
+systemctl enable grafana-server
+systemctl start grafana-server
+apt-get install -y prometheus
+# 添加 mosdns 任务配置
+cat << EOF | tee -a /etc/prometheus/prometheus.yml
+  - job_name: mosdns
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:8338']
+EOF
+# 重启 Prometheus
+systemctl restart prometheus
+
+curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | bash
+
+rm -f /root/.vector/config/vector.yaml
+
+curl -L https://github.com/KHTdhl/AIO/releases/download/v1.0/vector.yaml -o /root/.vector/config/vector.yaml
+
+cd /etc/systemd/system/
+
+touch vector.service
+
+cat << 'EOF' > vector.service
+[Unit]
+Description=Vector Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStartPre=/bin/sleep 10
+ExecStartPre=/bin/mkdir -p /tmp/vector
+ExecStart=/root/.vector/bin/vector --config /root/.vector/config/vector.yaml
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+
+sudo systemctl enable vector
+
+echo "Vector 配置文件已更新"
+install_over
+}
