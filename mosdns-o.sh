@@ -31,6 +31,9 @@
     systemctl restart systemd-resolved.service
     echo "配置mosdns规则"
     sleep 1
+git init
+git 
+    
     cd /etc
     wget -O mosdns.zip https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.zip
     unzip mosdns.zip
