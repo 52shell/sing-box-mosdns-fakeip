@@ -45,6 +45,7 @@
     echo "是否安装 mosdns webui y/n"
     read choice
     if [ "$choice" = "y" ]; then
+cd /root
 wget -O /root/loki_3.1.0_amd64.deb https://github.com/grafana/loki/releases/download/v3.1.0/loki_3.1.0_amd64.deb
 
 dpkg -i loki_3.1.0_amd64.deb    
