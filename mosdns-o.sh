@@ -31,15 +31,12 @@
     systemctl restart systemd-resolved.service
     echo "配置mosdns规则"
     sleep 1
-git init
-git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git
-git config core.sparsecheckout true
-echo 'mosdns' >> .git/info/sparse-checkout
-git pull origin main   
-    
-    cd /etc
-    wget -O mosdns.zip https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.zip
-    unzip mosdns.zip
+    git init
+    git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git
+    git config core.sparsecheckout true
+    echo 'mosdns' > .git/info/sparse-checkout
+    git pull origin main
+    cp -r mosdns /etc/
     echo "配置mosdns"
     sed -i "s/- addr: 10.10.10.147:6666/- addr: ${uiport}/g" /etc/mosdns/config.yaml
     echo "设置mosdns开机自启动"
