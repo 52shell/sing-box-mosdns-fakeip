@@ -10,7 +10,7 @@
     echo "系统架构是：$arch"
     mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.1/mosdns-linux-$arch.zip"
     apt update && apt -y upgrade || { echo "更新失败！退出脚本"; exit 1; }
-    apt install curl wget tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
+    apt install curl wget git tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
     echo -e "\n设置时区为Asia/Shanghai"
     timedatectl set-timezone Asia/Shanghai || { echo -e "\e[31m时区设置失败！退出脚本\e[0m"; exit 1; }
     echo -e "\e[32m时区设置成功\e[0m"
