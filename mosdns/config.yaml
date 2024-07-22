@@ -123,7 +123,7 @@ plugins:
     args:
       concurrent: 1
       upstreams:
-        - addr: 10.10.10.10:6666
+        - addr: tls://223.5.5.5:853
           enable_pipeline: false
           insecure_skip_verify: false
           idle_timeout: 30
@@ -134,7 +134,7 @@ plugins:
     args:
       concurrent: 1
       upstreams:
-        - addr: 10.10.10.100:6666
+        - addr: 10.10.10.147:6666
           enable_pipeline: false
           insecure_skip_verify: false
           idle_timeout: 30
