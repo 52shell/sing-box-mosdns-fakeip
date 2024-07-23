@@ -517,7 +517,7 @@ install_config() {
       "auto_detect_interface": true,
       "stop_always_resolve_udp": false,
       "concurrent_dial": true,
-      "keep_alive_period": "15s"
+     
       "default_mark": 1,
       "rules": [
 
