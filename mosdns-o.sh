@@ -49,7 +49,7 @@
     read choice
     if [ "$choice" = "y" ]; then
 cd /root
-wget -O /root/loki_3.1.0_amd64.deb https://github.com/grafana/loki/releases/download/v3.1.0/loki_3.1.0_amd64.deb
+wget https://github.com/grafana/loki/releases/download/v3.1.0/loki_3.1.0_amd64.deb
 
 dpkg -i loki_3.1.0_amd64.deb    
 
@@ -57,7 +57,7 @@ dpkg -i loki_3.1.0_amd64.deb
 apt-get install -y adduser libfontconfig1 musl
 
 # 下载并安装 Grafana Enterprise
-wget -O /root/grafana-enterprise_11.0.0_amd64.deb https://dl.grafana.com/enterprise/release/grafana-enterprise_11.0.0_amd64.deb
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise_11.0.0_amd64.deb
 dpkg -i grafana-enterprise_11.0.0_amd64.deb
 
 # 重新加载 systemd 并启用/启动 Grafana 服务器
