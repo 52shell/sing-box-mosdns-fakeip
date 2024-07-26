@@ -75,7 +75,7 @@ EOF
 # 重启 Prometheus
 systemctl restart prometheus
 
-curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | bash -s -- -y > /dev/null 2>&1
+curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | bash
 
 rm -f /root/.vector/config/vector.yaml
 
@@ -108,7 +108,18 @@ sudo systemctl daemon-reload
 sudo systemctl enable vector
 
 echo "Vector 配置文件已更新"
+(crontab -l 2>/dev/null; echo "0 0 * * 0 sudo truncate -s 0 /etc/mosdns/mosdns.log && /etc/mosdns/mos_rule_update.sh") | crontab -
 
+echo "定时更新规则与清理日志添加完成"
+
+local_ip=$(hostname -I | awk '{print $1}')
+
+# 打印 IP 地址
+echo "机器将在5秒后重启，重启后打开：$local_ip:3000,进入ui管理界面，后续参考孔佬教程"
+
+sleep 6
+
+reboot
     
 elif [ "$choice" = "n" ]; then
     install_over
