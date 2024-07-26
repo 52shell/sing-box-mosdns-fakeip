@@ -8,7 +8,7 @@ install_clash_config() {
     sleep 1
     mkdir /etc/clash >/dev/null 2>&1
     cd /etc/clash
-    wget -O wget -O config.yaml https://file.herozmy.com/File/sing-box/config_json/clash_config.yaml
+    wget -O config.yaml https://file.herozmy.com/File/sing-box/config_json/clash_config.yaml
     sed -i "s|^external-controller: :.*|external-controller: :$uiport|" /etc/clash/config.yaml
     
 # 如果设置的端口是53，则关闭系统的53端口并重启systemd-resolved服务
