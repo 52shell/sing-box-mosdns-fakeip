@@ -25,9 +25,9 @@ choose_singbox() {
 echo "欢迎使用脚本安装程序"
 echo "请选择要安装的版本："
 echo "1. 编译官方sing-box Core/升级"
-echo "2. 官版-Mosdns-O佬配置"
+echo "2. Mosdns-O佬 fakeip分流配置"
 echo "3. P版sing-box Core/升级"
-echo "4. P版-Mosdns-PH佬配置"
+echo "4. Mosdns-PH佬 fakeip分流配置"
 echo "5. hysteria2 回家"
 echo "6. mihomo (clash meta)"
 read choice
