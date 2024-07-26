@@ -36,7 +36,7 @@
     git config core.sparsecheckout true
     echo 'mosdns' > .git/info/sparse-checkout
     git pull origin main
-    cp -r mosdns /etc/
+    cd /root && mv mosdns /etc/
     echo "配置mosdns"
     sed -i "s/- addr: 10.10.10.147:6666/- addr: ${uiport}/g" /etc/mosdns/config.yaml
     echo "设置mosdns开机自启动"
