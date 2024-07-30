@@ -11,7 +11,7 @@ home() {
     clear
     echo "=================================================================="
     echo -e "\t\tLinux | 一键搭建脚本"
-    echo -e "\t\tPowered by www.herozmy.com 2024"
+    echo -e "\t\tPowered by www.herozmy.com 2024 1"
     echo -e "\t\\n"
     echo -e "温馨提示：\n本脚本推荐使用ububtu22.04环境，其他环境未经验证，仅供个人使用"
     echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
