@@ -192,7 +192,7 @@ install_config() {
             "tag": "机场",
             "healthcheck_url": "http://www.gstatic.com/generate_204",
             "healthcheck_interval": "10m0s",
-            "download_url": $suburl,
+            "download_url": "'"$suburl"'",
             "download_ua": "clash.meta",
             "download_interval": "24h0m0s",
             "download_detour": "direct"
