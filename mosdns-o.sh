@@ -75,7 +75,7 @@ EOF
 # 重启 Prometheus
 systemctl restart prometheus
 
-curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | bash
+curl --proto '=https' --tlsv1.2 -sSfL https://sh.vector.dev | bash -s -- -y > /dev/null 2>&1
 
 rm -f /root/.vector/config/vector.yaml
 
