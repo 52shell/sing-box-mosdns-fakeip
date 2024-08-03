@@ -46,7 +46,7 @@ bash install-sing-box-p.sh
         ;;
     #4)
 #wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
-bash mosdns-p.sh
+#bash mosdns-p.sh
        # ;;
     5)
 wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/hy2-gohome.sh >/dev/null 2>&1
