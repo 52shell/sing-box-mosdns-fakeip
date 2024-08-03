@@ -27,7 +27,7 @@ echo "请选择要安装的版本："
 echo "1. 编译官方sing-box Core/升级"
 echo "2. Mosdns-O佬 fakeip分流配置"
 echo "3. P版sing-box Core/升级"
-echo "4. Mosdns-PH佬 fakeip分流配置"
+#echo "4. Mosdns-PH佬 fakeip分流配置"
 echo "5. hysteria2 回家"
 echo "6. mihomo (clash meta)"
 read choice
@@ -44,10 +44,10 @@ bash mosdns-o.sh
 wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box-p.sh >/dev/null 2>&1
 bash install-sing-box-p.sh
         ;;
-    4)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
+    #4)
+#wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
 bash mosdns-p.sh
-        ;;
+       # ;;
     5)
 wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/hy2-gohome.sh >/dev/null 2>&1
 bash hy2-gohome.sh
