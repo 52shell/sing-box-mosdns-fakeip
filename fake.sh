@@ -307,6 +307,7 @@ show_menu_mosdns() {
   2. 卸载 mosdns
   3. 清理 mosdns 缓存
   4. 重新启动 mosdns 
+  5. 更新mosdns核心
  "
     show_status
     echo && read -p "请输入选择 [0-6]: " num
@@ -326,6 +327,9 @@ show_menu_mosdns() {
         ;;
     4)
         systemctl restart mosdns
+        ;;
+    5)
+        wget 
         ;;
     *)
         echo "请输入正确的数字 [0-5]"
