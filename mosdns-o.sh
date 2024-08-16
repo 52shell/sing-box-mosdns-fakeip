@@ -8,7 +8,7 @@
         exit 0
     fi
     echo "系统架构是：$arch"
-    mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.1/mosdns-linux-$arch.zip"
+    mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-$arch.zip"
     apt update && apt -y upgrade || { echo "更新失败！退出脚本"; exit 1; }
     apt install curl wget git tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
     echo -e "\n设置时区为Asia/Shanghai"
