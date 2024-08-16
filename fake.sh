@@ -329,7 +329,7 @@ show_menu_mosdns() {
         systemctl restart mosdns
         ;;
     5)
-        wget 
+        update_mosdns 
         ;;
     *)
         echo "请输入正确的数字 [0-5]"
