@@ -348,7 +348,27 @@ del_mosdns() {
 del_mosdns_cache() {
     echo "卸载mosdns的代码未提供"
 }
-
+update_mosdns() {
+    systemctl stop mosdns
+    if [[ $(uname -m) == "aarch64" ]]; then
+        arch="arm64"
+    elif [[ $(uname -m) == "x86_64" ]]; then
+        arch="amd64"
+    else
+        arch="未知"
+        exit 0
+    fi
+    echo "系统架构是：$arch"
+    mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-$arch.zip"
+    wget "${mosdns_host}" || { echo -e "\e[31m下载失败！退出脚本\e[0m"; exit 1; }
+    echo "开始解压"
+    unzip ./mosdns-linux-$arch.zip 
+    echo "复制 mosdns 到 /usr/bin"
+    sleep 1
+    cp -rv ./mosdns /usr/bin
+    chmod 0777 /usr/bin/mosdns 
+    systemctl start mosdns
+}
 system=""
 
 # 循环直到用户输入正确的值或选择退出
