@@ -338,7 +338,24 @@ show_menu_mosdns() {
 }
 
 updata_mosdns_rule() {
-    echo "安装mosdns的代码未提供"
+mkdir -p /etc/mosdns_install
+
+# 下载并重命名文件
+curl -s https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/direct-list.txt > /etc/mosdns_install/geosite_cn.txt
+curl -s https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt > /etc/mosdns_install/geoip_cn.txt
+curl -s https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/proxy-list.txt > /etc/mosdns_install/geosite_geolocation_noncn.txt
+curl -s https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt > /etc/mosdns_install/gfw.txt
+
+# 删除小于50KB的文件
+find /etc/mosdns_install/ -type f -size -50k -exec rm {} \;
+
+# 将文件复制到 /etc/mosdns
+cp -r /etc/mosdns_install/* /etc/mosdns/
+
+# 重启 mosdns 服务
+systemctl restart mosdns.service
+
+
 }
 
 del_mosdns() {
@@ -346,7 +363,11 @@ del_mosdns() {
 }
 
 del_mosdns_cache() {
-    echo "卸载mosdns的代码未提供"
+    echo "清理cache.jump缓存"
+    systemctl stop mosdns
+    rm -rf /etc/mosdns/cache.jump
+    echo "清理cache.jump完成，正在启动mosdns"
+    systemctl start mosdns
 }
 update_mosdns() {
     systemctl stop mosdns
