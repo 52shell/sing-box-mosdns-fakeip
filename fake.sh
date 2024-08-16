@@ -359,6 +359,7 @@ update_mosdns() {
         exit 0
     fi
     echo "系统架构是：$arch"
+    rm -rf mosdns*
     mosdns_host="https://github.com/IrineSistiana/mosdns/releases/download/v5.3.3/mosdns-linux-$arch.zip"
     wget "${mosdns_host}" || { echo -e "\e[31m下载失败！退出脚本\e[0m"; exit 1; }
     echo "开始解压"
