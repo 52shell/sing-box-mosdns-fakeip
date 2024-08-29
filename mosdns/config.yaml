@@ -78,16 +78,16 @@ plugins:
     type: ecs_handler
     args:
       forward: false
-      preset:  183.195.1.1
+      preset: 183.195.1.1
       mask4: 24
 
   - tag: lazy_cache
     type: cache
     args:
-      size: 32768
-      lazy_cache_ttl: 86400
+      size: 0
+      lazy_cache_ttl: 0
       dump_file: /etc/mosdns/cache.dump
-      dump_interval: 3600
+      dump_interval: 0
 
   - tag: reject_3
     type: sequence
@@ -121,12 +121,12 @@ plugins:
   - tag: forward_local
     type: forward
     args:
-      concurrent: 1
+      concurrent: 2
       upstreams:
         - addr: tls://223.5.5.5:853
           enable_pipeline: false
           insecure_skip_verify: false
-          idle_timeout: 30
+          idle_timeout: 50
           enable_http3: false
 
   - tag: forward_remote
@@ -137,7 +137,7 @@ plugins:
         - addr: 10.10.10.147:6666
           enable_pipeline: false
           insecure_skip_verify: false
-          idle_timeout: 30
+          idle_timeout: 50
           enable_http3: false
 
   - tag: forward_cf
@@ -146,9 +146,9 @@ plugins:
       concurrent: 1
       upstreams:
         - addr: tls://8.8.8.8:853
-          enable_pipeline: true
+          enable_pipeline: false
           insecure_skip_verify: false
-          idle_timeout: 30
+          idle_timeout: 50
           enable_http3: false
 
   - tag: modify_ttl
@@ -245,12 +245,14 @@ plugins:
     args:
       - exec: $ecs_local
       - exec: $forward_cf_upstream
+      - matches: "rcode 2"
+        exec: goto local_sequence
       - matches: "resp_ip $geoip_cn"
-        exec: $local_sequence
+        exec: goto local_sequence
       - matches: "!resp_ip 0.0.0.0/0 ::/0"
         exec: accept  
       - matches: "!resp_ip $geoip_cn"
-        exec: $remote_sequence
+        exec: goto remote_sequence
 
   - tag: main_sequence
     type: sequence
@@ -286,10 +288,10 @@ plugins:
     type: udp_server
     args:
       entry: main_sequence
-      listen: "[::]:53"
+      listen: ":53"
 
   - tag: tcp_server
     type: tcp_server
     args:
       entry: main_sequence
-      listen: "[::]:53"
+      listen: ":53"
