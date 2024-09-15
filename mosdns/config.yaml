@@ -124,6 +124,7 @@ plugins:
       concurrent: 2
       upstreams:
         - addr: tls://223.5.5.5:853
+        #- addr: dc00::1007
           enable_pipeline: false
           insecure_skip_verify: false
           idle_timeout: 50
