@@ -75,7 +75,7 @@
             "tag":"♾️Global",
             "type":"selector",
             "outbounds":[
-            {all}
+            "{all}"
         ]
         },
         {
