@@ -54,33 +54,10 @@
         "listen_port": 10000
       },
        {
-        "type": "direct",      # 这个6666 端口号 ， 和MOSDNS remote 中的端口号一致
+        "type": "direct",
         "tag": "dns-in",
          "listen": "::",
         "listen_port": 6666
-        },
-       {
-         "type": "hysteria2",
-         "tag": "hy2-in",
-         "listen": "::",
-         "listen_port": 8443, 
-          "sniff": true,
-          "sniff_override_destination": false,
-          "sniff_timeout": "100ms",
-         "users": [
-                {
-                "password": ""    # 密码
-                }
-            ],
-         "ignore_client_bandwidth": true,
-          "tls": {
-                "enabled": true,
-                "alpn": [
-                    "h3"
-                ],
-                "certificate_path": "/root/hysteria/cert.pem",
-                "key_path": "/root/hysteria/private.key"
-            }
         },
         {
         "type": "tproxy",
