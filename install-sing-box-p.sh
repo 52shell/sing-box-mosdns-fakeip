@@ -86,11 +86,10 @@ fi
 install_config() {
  mkdir  /etc/sing-box/providers
  echo '
-
 {
   "log": {
-    "disabled": true,
-    "level": "debug",
+    "disabled": false,
+    "level": "panic",
     "timestamp": true
   },
   "experimental": {
@@ -98,42 +97,46 @@ install_config() {
       "external_controller": "0.0.0.0:9090",
       "external_ui": "/etc/sing-box/ui",
       "secret": "",
-      "external_ui_download_url": "https://mirror.ghproxy.com/https://github.com/MetaCubeX/metacubexd/archive/gh-pages.zip",
-      "external_ui_download_detour": "direct",
       "default_mode": "rule"
     },
     "cache_file": {
       "enabled": true,
-      "path": "/etc/sing-box/cache.db",
+      "path": "etc/sing-box/cache.db",
       "store_fakeip": true
     }
   },
   "dns": {
     "servers": [
       {
-        "tag": "nodedns",
+        "tag": "localDns",
         "address": "tls://223.5.5.5:853",
+        "detour": "direct"
+      },
+      {
+        "tag": "nodedns",
+        "address": "tls://223.6.6.6:853",
         "detour": "direct"
       },
       {
         "tag": "fakeipDNS",
         "address": "fakeip"
+      },
+      {
+        "tag": "block",
+        "address": "rcode://success"
       }
     ],
     "rules": [
       {
         "inbound": "in-dns",
         "server": "fakeipDNS",
-        "rewrite_ttl": 5,
-        "disable_cache": false
+        "disable_cache": false,
+         "rewrite_ttl": 1
       },
-    {
-        "domain_suffix": [
-            "herozmy.com"
-         ],
-        "server": "nodedns",
-        "disable_cache": true
-    },
+      {
+        "outbound": "direct",
+        "server": "localDns"
+      },
       {
         "outbound": "any",
         "server": "nodedns",
@@ -142,58 +145,48 @@ install_config() {
     ],
     "fakeip": {
       "enabled": true,
-      "inet4_range": "28.0.0.1/8"
+      "inet4_range": "28.0.0.0/8",
+      "inet6_range": "fc00::/18"
     },
     "independent_cache": true,
+    "lazy_cache": true,
     "disable_expire": false,
-    "reverse_mapping": false,
-    "strategy": "ipv4_only",
-    "final": "nodedns"
+    "final": "localDns"
   },
   "inbounds": [
     {
+      "type": "mixed",
+      "listen": "::",
+      "listen_port": 10000
+    },
+    {
       "type": "direct",
       "tag": "in-dns",
-      "sniff": true,
+      "tcp_fast_open": true,
+      "sniff": false,
       "listen": "::",
       "listen_port": 6666
     },
     {
       "type": "tproxy",
-      "tag": "tproxy-in",
+      "tag": "tp",
       "listen": "::",
       "listen_port": 7896,
-      "tcp_multi_path": false,
-      "tcp_fast_open": false,
-      "udp_fragment": true,
-      "sniff": true,
+      "tcp_fast_open": true,
+      "sniff": false,
       "sniff_override_destination": false,
-      "sniff_timeout": "50ms",
+      "sniff_timeout": "300ms",
       "udp_disable_domain_unmapping": false,
       "udp_timeout": "5m"
-    },
-    {
-      "type": "mixed",
-      "listen": "0.0.0.0",
-      "listen_port": 7893,
-      "sniff": false,
-      "users": []
-    },
-    {
-      "type": "http",
-      "listen": "0.0.0.0",
-      "listen_port": 7890,
-      "sniff": false,
-      "users": []
     },
     {
       "type": "socks",
       "listen": "0.0.0.0",
       "listen_port": 7891,
-      "tcp_multi_path": true,
-      "tcp_fast_open": true,
-      "udp_fragment": true,
-      "sniff": true,
+      "tcp_multi_path": false,
+      "tcp_fast_open": false,
+      "udp_fragment": false,
+      "sniff": false,
       "users": []
     }
   ],
@@ -210,28 +203,57 @@ install_config() {
             "download_detour": "direct"
         }
     ],
-  "outbounds": [
-      {
-         "type": "selector",
-         "tag": "🚀 节点选择",
-         "outbounds": [
-            "🔄 自动选择",
-            "♻️ 手动选择", 
-            "🇯🇵 日本节点",
-            "✨台湾节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点",
-            "🎯 全球直连"
-         ]
-      },
+   "outbounds": [
       {
          "type": "selector",
          "tag": "♻️ 手动选择",
          "providers": [
             "机场"
-         ]
+         ],
+         "excludes": "Premium"
+      },
+      {
+         "type": "selector",
+         "tag": "🚀 节点选择",
+         "outbounds": [
+            "🔄 自动选择",
+            "♻️ 手动选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "🇯🇵 日本节点",
+            "✨台湾节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+         ],
+         "excludes": "Premium"
+      },
+      {
+        "tag": "🌌 Google",
+        "type": "selector",
+        "outbounds": [
+            "🚀 节点选择",
+            "♻️ 手动选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "✨台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+        ],
+         "excludes": "Premium",
+         "default": "🇭🇰 香港节点"
       },
       {
         "tag":"🤖 OpenAI",
@@ -239,6 +261,12 @@ install_config() {
         "outbounds":[
             "🚀 节点选择",
             "♻️ 手动选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
             "✨台湾节点",
             "🇯🇵 日本节点",
             "🇸🇬 狮城节点",
@@ -246,180 +274,43 @@ install_config() {
             "🇺🇲 美国节点",
             "🔰 其它节点"
         ],
-        "default": "🇺🇲 美国节点"
-      },
-      {
-         "type": "urltest",
-         "tag": "🔄 自动选择",
-         "providers": [
-          "机场"
-         ],
-         "idle_timeout": "30001h",
-         "interval": "30000h",
-         "tolerance": 50
+         "excludes": "Premium",
+        "default": "自建节点"
       },
       {
          "type": "selector",
          "tag": "📲 电报消息",
          "outbounds": [
+         "自建节点",
             "🚀 节点选择",
             "♻️ 手动选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
             "✨台湾节点",
             "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-         ]
-      },
-      {
-         "type": "selector",
-         "tag": "🍎 苹果服务",
-         "outbounds": [
-            "🎯 全球直连",
-            "direct", 
-            "🚀 节点选择",
-            "♻️ 手动选择",
-            "🇯🇵 日本节点",
-            "✨台湾节点",
             "🇸🇬 狮城节点",
             "🇭🇰 香港节点",
             "🇺🇲 美国节点",
             "🔰 其它节点"
          ],
-         "default": "direct"
-      },
-      {
-         "type": "selector",
-         "tag": "🐟 漏网之鱼",
-         "outbounds": [
-          "🎯 全球直连",
-          "direct", 
-          "🚀 节点选择",
-          "♻️ 手动选择",
-          "🇯🇵 日本节点",
-          "✨台湾节点",
-          "🇸🇬 狮城节点",
-          "🇭🇰 香港节点",
-          "🇺🇲 美国节点",
-          "🔰 其它节点"
-       ],
-       "default": "🚀 节点选择"
-    },
-      {
-        "tag": "🌌 Google",
-        "type": "selector",
-        "outbounds": [
-            "🚀 节点选择",
-            "♻️ 手动选择", 
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "🇭🇰 香港节点"
-      },
-      {
-        "tag": "🐦 Twitter",
-        "type": "selector",
-        "outbounds": [
-            "🚀 节点选择",
-            "♻️ 手动选择",
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "🚀 节点选择"
-      },
-      {
-        "tag": "👤 Facebook",
-        "type": "selector",
-        "outbounds": [
-            "🚀 节点选择",
-            "♻️ 手动选择",
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "🚀 节点选择"
-      },
-      {
-        "tag": "🛍️ Amazon",
-        "type": "selector",
-        "outbounds": [
-            "🚀 节点选择",
-            "♻️ 手动选择",
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "🚀 节点选择"
-      },
-      {
-        "tag": "🧩 Microsoft",
-        "type": "selector",
-        "outbounds": [
-            "direct",
-            "🚀 节点选择",
-            "♻️ 手动选择", 
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "direct"
-      },
-      {
-        "tag": "🎮 Game",
-        "type": "selector",
-        "outbounds": [
-            "direct",
-            "🚀 节点选择",
-            "♻️ 手动选择",
-            "🇯🇵 日本节点",
-            "✨台湾节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "direct"
-      },
-      {
-        "tag": "📺 Bilibili",
-        "type": "selector",
-        "outbounds": [
-            "direct",
-            "🚀 节点选择",
-            "♻️ 手动选择", 
-            "✨台湾节点",
-            "🇯🇵 日本节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-        ],
-        "default": "direct"
+         "excludes": "Premium"
       },
       {
         "tag": "🎬 MediaVideo",
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
-            "♻️ 手动选择", 
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "♻️ 手动选择",
             "✨台湾节点",
             "🇯🇵 日本节点",
             "🇸🇬 狮城节点",
@@ -427,12 +318,44 @@ install_config() {
             "🇺🇲 美国节点",
             "🔰 其它节点"
         ],
-        "default": "🚀 节点选择"
+         "excludes": "Premium",
+         "default": "🚀 节点选择"
+      },
+
+      {
+         "type": "selector",
+         "tag": "🍎 苹果服务",
+         "outbounds": [
+            "direct",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "🚀 节点选择",
+            "♻️ 手动选择",
+            "🇯🇵 日本节点",
+            "✨台湾节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+         ],
+         "excludes": "Premium",
+         "default": "direct"
       },
       {
-        "tag": "🌏 !cn",
+        "tag": "🧩 Microsoft",
         "type": "selector",
         "outbounds": [
+            "direct",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
             "🚀 节点选择",
             "♻️ 手动选择",
             "✨台湾节点",
@@ -442,13 +365,87 @@ install_config() {
             "🇺🇲 美国节点",
             "🔰 其它节点"
         ],
-        "default": "🚀 节点选择"
+         "excludes": "Premium",
+         "default": "direct"
       },
       {
-         "type": "selector",
-         "tag": "🎯 全球直连",
+        "tag": "🐦 Twitter",
+        "type": "selector",
+        "outbounds": [
+            "🚀 节点选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "♻️ 手动选择",
+            "✨台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+        ],
+         "excludes": "Premium",
+        "default": "自建节点"
+      },
+      {
+        "tag": "👤 Facebook",
+        "type": "selector",
+        "outbounds": [
+            "🚀 节点选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "♻️ 手动选择",
+            "✨台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+        ],
+         "excludes": "Premium",
+         "default": "🚀 节点选择"
+      },
+      {
+        "tag": "🛍️ Amazon",
+        "type": "selector",
+        "outbounds": [
+            "🚀 节点选择",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "♻️ 手动选择",
+            "✨台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇭🇰 香港节点",
+            "🇺🇲 美国节点",
+            "🔰 其它节点"
+        ],
+         "excludes": "Premium",
+         "default": "🚀 节点选择"
+      },
+      {
+        "tag": "🎮 Game",
+        "type": "selector",
         "outbounds": [
             "direct",
+            "🇯🇵 日本节点-urltest",
+            "✨台湾节点-urltest",
+            "🇸🇬 狮城节点-urltest",
+            "🇭🇰 香港节点-urltest",
+            "🇺🇲 美国节点-urltest",
+            "🔰 其它节点-urltest",
+            "🚀 节点选择",
             "♻️ 手动选择",
             "🇯🇵 日本节点",
             "✨台湾节点",
@@ -457,20 +454,19 @@ install_config() {
             "🇺🇲 美国节点",
             "🔰 其它节点"
         ],
-        "default": "direct"
+         "excludes": "Premium",
+         "default": "direct"
       },
       {
-         "type": "selector",
-         "tag": "GLOBAL",
-         "outbounds": [
-            "🎯 全球直连",
-            "🇯🇵 日本节点",
-            "✨台湾节点",
-            "🇸🇬 狮城节点",
-            "🇭🇰 香港节点",
-            "🇺🇲 美国节点",
-            "🔰 其它节点"
-         ]
+         "type": "urltest",
+         "tag": "🔄 自动选择",
+         "providers": [
+            "机场"
+         ],
+         "excludes": "Premium",
+         "idle_timeout": "30001h",
+         "interval": "30000h",
+         "tolerance": 50
       },
       {
          "tag": "block",
@@ -479,9 +475,9 @@ install_config() {
       {
          "tag": "direct",
          "type": "direct",
-         "tcp_fast_open": true,
-         "udp_fragment": true,
-         "tcp_multi_path": true
+         "tcp_fast_open": false,
+         "udp_fragment": false,
+         "tcp_multi_path": false
       },
       {
          "tag": "dns-out",
@@ -491,103 +487,131 @@ install_config() {
          "type": "selector",
          "tag": "🇯🇵 日本节点",
          "use_all_providers": true,
-         "includes": "(?i)日本|东京|大阪|[^-]日|JP|Japan"
+         "includes": "(?i)日本|东京|大阪|[^-]日|JP|Japan",
+         "excludes": "Premium"
       },
       {
          "type": "selector",
          "tag": "🇸🇬 狮城节点",
          "use_all_providers": true,
-         "includes": "(?i)新加坡|坡|狮城|SG|Singapore"
+         "includes": "(?i)新加坡|坡|狮城|SG|Singapore",
+         "excludes": "Premium"
       },
       {
          "type": "selector",
          "tag": "🇭🇰 香港节点",
          "use_all_providers": true,
-         "includes": "(?i)香港|HK|hk|Hong Kong|HongKong|hongkong"
+         "includes": "(?i)香港|HK|hk|Hong Kong|HongKong|hongkong",
+         "excludes": "Premium"
       },
       {
          "type": "selector",
          "tag": "✨台湾节点",
          "use_all_providers": true,
-         "includes": "(?i)🇹🇼|TW|tw|台湾|臺灣|台|Taiwan"
+         "includes": "(?i)🇹🇼|TW|tw|台湾|臺灣|台|Taiwan",
+         "excludes": "Premium"
       },
       {
          "type": "selector",
          "tag": "🇺🇲 美国节点",
          "use_all_providers": true,
-         "includes": "(?i)美|达拉斯|洛杉矶|圣何塞|US|United States"
+         "includes": "(?i)美|达拉斯|洛杉矶|圣何塞|US|United States",
+         "excludes": "Premium"
       },
       {
          "type": "selector",
          "tag": "🔰 其它节点",
          "use_all_providers": true,
-         "includes": "(?i)德国|DE|brd|germany|荷兰|NL|Netherlands|法国|FR|France|French Republic|澳大利亚|AU|Australia|迪拜|UAE|Dubai|印度|IN|India|KR|Korea|KOR|首尔|韩|韓|英国|UnitedKingdom|UK|英|瑞典|Sweden|SE|巴西|Brazil|BR|非洲|Africa|AF"
+         "includes": "(?i)德国|DE|brd|germany|荷兰|NL|Netherlands|法国|FR|France|French Republic|澳大利亚|AU|Australia|迪拜|UAE|Dubai|印度|IN|India|KR|Korea|KOR|首尔|韩|韓|英国|UnitedKingdom|UK|英|瑞典|Sweden|SE|巴西|Brazil|BR|非洲|Africa|AF",
+         "excludes": "Premium"
+      },
+
+
+      {
+         "type": "urltest",
+         "tag": "🇯🇵 日本节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)日本|东京|大阪|[^-]日|JP|Japan",
+         "excludes": "Premium"
+      },
+      {
+         "type": "urltest",
+         "tag": "🇸🇬 狮城节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)新加坡|坡|狮城|SG|Singapore",
+         "excludes": "Premium"
+      },
+      {
+         "type": "urltest",
+         "tag": "🇭🇰 香港节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)香港|HK|hk|Hong Kong|HongKong|hongkong",
+         "excludes": "Premium"
+      },
+      {
+         "type": "urltest",
+         "tag": "✨台湾节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)🇹🇼|TW|tw|台湾|臺灣|台|Taiwan",
+         "excludes": "Premium"
+      },
+      {
+         "type": "urltest",
+         "tag": "🇺🇲 美国节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)美|达拉斯|洛杉矶|圣何塞|US|United States",
+         "excludes": "Premium"
+      },
+      {
+         "type": "urltest",
+         "tag": "🔰 其它节点-urltest",
+         "use_all_providers": true,
+         "includes": "(?i)德国|DE|brd|germany|荷兰|NL|Netherlands|法国|FR|France|French Republic|澳大利亚|AU|Australia|迪拜|UAE|Dubai|印度|IN|India|KR|Korea|KOR|首尔|韩|韓|英国|UnitedKingdom|UK|英|瑞典|Sweden|SE|巴西|Brazil|BR|非洲|Africa|AF",
+         "excludes": "Premium"
+      },
+      {
+         "type": "selector",
+         "tag": "🐟 漏网之鱼",
+         "outbounds": "🚀 节点选择",
+         "excludes": "Premium"
       }
     ],
-  "route": {
-      "final": "🐟 漏网之鱼",
-      "auto_detect_interface": true,
-      "stop_always_resolve_udp": false,
-      "concurrent_dial": true,
-     
-      "default_mark": 1,
+    "route": {
+     "final": "🐟 漏网之鱼",
+     "auto_detect_interface": true,
+     "concurrent_dial": true,
+     "default_mark": 1,
       "rules": [
-
       {
         "inbound": "in-dns",
         "outbound": "dns-out"
       },
       {
-        "port": 53,
-        "outbound": "dns-out"
-      },
-      {
-        "protocol": "dns",
-        "outbound": "dns-out"
-      },
-      {
-        "protocol": "quic",
-        "outbound": "block"
-      },
-      {
-        "protocol": "stun",
-        "outbound": "block"
-      },
-      {
-        "clash_mode": "direct",
+        "ip_cidr": [
+          "8.8.8.8",
+          "8.8.4.4",
+          "1.1.1.1",
+          "1.0.0.1",
+          "9.9.9.9"
+        ],
         "skip_resolve": true,
-        "outbound": "direct"
+        "outbound": "🚀 节点选择"
       },
       {
-        "clash_mode": "global",
-        "skip_resolve": true,
-        "outbound": "GLOBAL"
-      },
-      {
-        "domain": [
-          "clash.razord.top",
-          "yacd.metacubex.one",
-          "yacd.haishan.me",
-          "d.metacubex.one"
+        "ip_cidr": [
+          "223.5.5.5",
+          "223.6.6.5",
+          "119.29.29.29",
+          "119.28.28.28"
         ],
         "skip_resolve": true,
         "outbound": "direct"
       },
       {
-        "domain_suffix": [
-          "microsoft.com",
-          "browserleaks.com"
-        ],
-        "outbound": "🌌 Google"
+        "network": "udp",
+        "port": 443,
+        "outbound": "block"
       },
-      {
-        "domain_suffix": [
-          "googleapis.com",
-          "googleapis.cn",
-          "gstatic.com"
-        ],
-        "outbound": "🌌 Google"
-      }, 
       {
         "rule_set": "geosite-openai",
         "skip_resolve": true,
@@ -601,24 +625,32 @@ install_config() {
       {
         "rule_set": [
           "geosite-google",
+          "geoip-google",
           "geosite-github"
         ],
         "skip_resolve": true,
         "outbound": "🌌 Google"
       },
       {
-        "rule_set": "geosite-telegram",
+        "rule_set": [
+          "geosite-telegram",
+          "geoip-telegram"
+        ],
         "skip_resolve": true,
         "outbound": "📲 电报消息"
       },
       {
-        "rule_set": "geosite-twitter",
+        "rule_set": [
+          "geosite-twitter",
+          "geoip-twitter"
+        ],
         "skip_resolve": true,
         "outbound": "🐦 Twitter"
       },
       {
         "rule_set": [
           "geosite-facebook",
+          "geoip-facebook",
           "geosite-instagram"
         ],
         "skip_resolve": true,
@@ -650,14 +682,10 @@ install_config() {
         "outbound": "🎮 Game"
       },
       {
-        "rule_set": "geosite-bilibili",
-        "skip_resolve": true,
-        "outbound": "📺 Bilibili"
-      },
-      {
         "rule_set": [
           "geosite-tiktok",
           "geosite-netflix",
+          "geoip-netflix",
           "geosite-hbo",
           "geosite-disney",
           "geosite-primevideo"
@@ -671,17 +699,12 @@ install_config() {
         "outbound": "🚀 节点选择"
       },
       {
-        "ip_is_private": true,
+        "rule_set": "geoip-cn",
         "skip_resolve": true,
         "outbound": "direct"
       },
       {
-        "rule_set": "geoip-netflix",
-        "skip_resolve": true,
-        "outbound": "🎬 MediaVideo"
-      },
-      {
-        "rule_set": "geoip-cn",
+        "ip_is_private": true,
         "skip_resolve": true,
         "outbound": "direct"
       }
@@ -690,6 +713,7 @@ install_config() {
       {
         "tag": "geoip-google",
         "type": "remote",
+        "path": "/etc/sing-box/rule/geoip/google.srs",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/google.srs",
         "download_detour": "direct",
@@ -699,6 +723,7 @@ install_config() {
         "tag": "geoip-telegram",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geoip/telegram.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/telegram.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -707,6 +732,7 @@ install_config() {
         "tag": "geoip-twitter",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geoip/twitter.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/twitter.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -715,6 +741,7 @@ install_config() {
         "tag": "geoip-facebook",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geoip/facebook.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/facebook.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -723,6 +750,7 @@ install_config() {
         "tag": "geoip-netflix",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geoip/netflix.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/netflix.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -731,6 +759,7 @@ install_config() {
         "tag": "geoip-cn",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geoip/geoip-cn.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -739,6 +768,7 @@ install_config() {
         "tag": "geosite-openai",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/openai.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/openai.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -747,6 +777,7 @@ install_config() {
         "tag": "geosite-youtube",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/youtube.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/youtube.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -755,6 +786,7 @@ install_config() {
         "tag": "geosite-google",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/google.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/google.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -763,6 +795,7 @@ install_config() {
         "tag": "geosite-github",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/github.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/github.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -771,6 +804,7 @@ install_config() {
         "tag": "geosite-telegram",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/telegram.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/telegram.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -779,6 +813,7 @@ install_config() {
         "tag": "geosite-twitter",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/twitter.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/twitter.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -787,6 +822,7 @@ install_config() {
         "tag": "geosite-facebook",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/facebook.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/facebook.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -795,6 +831,7 @@ install_config() {
         "tag": "geosite-instagram",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/instagram.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/instagram.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -803,6 +840,7 @@ install_config() {
         "tag": "geosite-amazon",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/amazon.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/amazon.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -811,6 +849,7 @@ install_config() {
         "tag": "geosite-apple",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/apple.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/apple.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -819,6 +858,7 @@ install_config() {
         "tag": "geosite-microsoft",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/microsoft.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/microsoft.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -827,6 +867,7 @@ install_config() {
         "tag": "geosite-category-games",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/category-games.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-games.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -835,6 +876,7 @@ install_config() {
         "tag": "geosite-category-games-cn",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/category-games@cn.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-games@cn.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -843,6 +885,7 @@ install_config() {
         "tag": "geosite-bilibili",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/bilibili.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/bilibili.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -851,6 +894,7 @@ install_config() {
         "tag": "geosite-tiktok",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/tiktok.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/tiktok.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -859,6 +903,7 @@ install_config() {
         "tag": "geosite-netflix",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/netflix.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/netflix.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -867,6 +912,7 @@ install_config() {
         "tag": "geosite-hbo",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/hbo.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/hbo.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -875,6 +921,7 @@ install_config() {
         "tag": "geosite-disney",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/disney.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/disney.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -883,14 +930,16 @@ install_config() {
         "tag": "geosite-primevideo",
         "type": "remote",
         "format": "binary",
-       "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/primevideo.srs",
-        "download_detour": "direct",
-        "update_interval": "7d"
+        "path": "/etc/sing-box/rule/geosite/primevideo.srs",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/primevideo.srs",
+         "download_detour": "direct",
+         "update_interval": "7d"
       },
       {
         "tag": "geosite-cn",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/geosite-cn.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -899,6 +948,7 @@ install_config() {
         "tag": "geosite-geolocation-!cn",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/geolocation-!cn.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
         "download_detour": "direct",
         "update_interval": "7d"
@@ -907,6 +957,7 @@ install_config() {
         "tag": "geosite-category-ads-all",
         "type": "remote",
         "format": "binary",
+        "path": "/etc/sing-box/rule/geosite/category-ads-all.srs",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
         "download_detour": "direct",
         "update_interval": "7d"
