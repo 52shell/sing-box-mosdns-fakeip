@@ -69,7 +69,19 @@ elif [ "$choice" = "n" ]; then
 fi
     
 }
-
+ui_install(){
+    echo "是否拉取ui源码 y/n"
+    read choice
+if [ "$choice" = "y" ]; then
+    apt install git
+    git clone https://github.com/metacubex/metacubexd.git -b gh-pages /etc/sing-box/ui
+    
+elif [ "$choice" = "n" ]; then
+    echo "请手动下载源码并解压至/etc/sing-box/ui."
+    echo "地址: https://github.com/metacubex/metacubexd"
+fi
+    
+}
 ################################开始创建config.json################################
 install_config() {
  mkdir  /etc/sing-box/providers
@@ -1128,6 +1140,7 @@ echo "=================================================================="
 main() {
     install_singbox
     customize_settings
+    ui_install
     install_service
     install_tproxy
     install_sing_box_over
