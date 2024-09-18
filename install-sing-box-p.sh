@@ -941,11 +941,32 @@ fi
 }
 ################################安装tproxy################################
 install_tproxy() {
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    if [ "$ID" = "debian" ]; then
+        echo "当前系统为 Debian 系统"
+    elif [ "$ID" = "ubuntu" ]; then
+        echo "当前系统为 Ubuntu 系统"
+        echo "关闭 53 端口监听"
+        
+        # 确保 DNSStubListener 没有已经被设置为 no
+        if grep -q "^DNSStubListener=no" /etc/systemd/resolved.conf; then
+            echo "DNSStubListener 已经设置为 no, 无需修改"
+        else
+            sed -i '/^#*DNSStubListener/s/#*DNSStubListener=yes/DNSStubListener=no/' /etc/systemd/resolved.conf
+            echo "DNSStubListener 已被设置为 no"
+            systemctl restart systemd-resolved.service
+            sleep 1
+        fi
+    else
+        echo "当前系统不是 Debian 或 Ubuntu. 请更换系统"
+        exit 0
+    fi
+else
+    echo "无法识别系统，请更换 Ubuntu 或 Debian"
+    exit 0
+fi
 
-    echo "关闭53端口监听"
-    sed -i '/^#*DNSStubListener/s/#*DNSStubListener=yes/DNSStubListener=no/' /etc/systemd/resolved.conf
-    systemctl restart systemd-resolved.service
-    sleep 1
     echo "创建系统转发"
 # 判断是否已存在 net.ipv4.ip_forward=1
     if ! grep -q '^net.ipv4.ip_forward=1$' /etc/sysctl.conf; then
