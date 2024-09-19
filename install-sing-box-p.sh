@@ -275,7 +275,7 @@ install_config() {
             "🔰 其它节点"
         ],
          "excludes": "Premium",
-        "default": "自建节点"
+        "default": "🇺🇲 美国节点"
       },
       {
          "type": "selector",
