@@ -85,6 +85,7 @@ fi
 ################################开始创建config.json################################
 install_config() {
  mkdir  /etc/sing-box/providers
+ mkdir -p /etc/sing-box/rule/geoip /etc/sing-box/rule/geosite
  echo '
 {
   "log": {
