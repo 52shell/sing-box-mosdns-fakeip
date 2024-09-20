@@ -113,7 +113,13 @@ echo "Vector 配置文件已更新"
 echo "定时更新规则与清理日志添加完成"
 
 local_ip=$(hostname -I | awk '{print $1}')
-
+echo "=================================================================="
+echo -e "\t\t\Mosdns fake安装完成"
+echo -e "\t\t\tPowered by www.herozmy.com 2024"
+echo -e "\n"
+echo -e "温馨提示:\nMosdns网关自行配置为sing-box，dns随意"
+echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
+echo "=================================================================="
 # 打印 IP 地址
 echo "机器将在5秒后重启，重启后打开：$local_ip:3000,进入ui管理界面，后续参考孔佬教程"
 
@@ -122,10 +128,6 @@ sleep 6
 reboot
     
 elif [ "$choice" = "n" ]; then
-    install_over
-fi
-
-install_over(){   
 echo "=================================================================="
 echo -e "\t\t\Mosdns fake安装完成"
 echo -e "\t\t\tPowered by www.herozmy.com 2024"
@@ -133,6 +135,6 @@ echo -e "\n"
 echo -e "温馨提示:\nMosdns网关自行配置为sing-box，dns随意"
 echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
 echo "=================================================================="
-}
+fi
 
 
