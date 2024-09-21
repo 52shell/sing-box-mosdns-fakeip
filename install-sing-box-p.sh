@@ -604,7 +604,6 @@ mkdir /etc/sing-box/providers
          "outbounds": "🚀 节点选择",
          "excludes": "Premium"
       }
-}
     ],
     "route": {
      "final": "🐟 漏网之鱼",
