@@ -110,7 +110,7 @@ mkdir /etc/sing-box/providers
     },
     "cache_file": {
       "enabled": true,
-      "path": "/etc/sing-box/cache.db",
+      "path": "etc/sing-box/cache.db",
       "store_fakeip": true
     }
   },
@@ -119,6 +119,11 @@ mkdir /etc/sing-box/providers
       {
         "tag": "localDns",
         "address": "tls://223.5.5.5:853",
+        "detour": "direct"
+      },
+      {
+        "tag": "nodedns",
+        "address": "tls://223.6.6.6:853",
         "detour": "direct"
       },
       {
@@ -135,7 +140,7 @@ mkdir /etc/sing-box/providers
         "inbound": "in-dns",
         "server": "fakeipDNS",
         "disable_cache": false,
-        "rewrite_ttl": 1
+         "rewrite_ttl": 1
       },
       {
         "outbound": "direct",
@@ -143,14 +148,14 @@ mkdir /etc/sing-box/providers
       },
       {
         "outbound": "any",
-        "server": "localDns",
+        "server": "nodedns",
         "disable_cache": false
       }
     ],
     "fakeip": {
       "enabled": true,
       "inet4_range": "28.0.0.0/8",
-      "inet6_range": "f2b0::/18"
+      "inet6_range": "fc00::/18"
     },
     "independent_cache": true,
     "lazy_cache": true,
@@ -192,27 +197,37 @@ mkdir /etc/sing-box/providers
       "udp_fragment": false,
       "sniff": false,
       "users": []
+    },
+    {
+      "type": "shadowsocks",
+      "tag": "ss-in",
+      "tcp_fast_open": true,
+      "listen": "0.0.0.0",
+      "listen_port": 10813,
+      "method": "aes-128-gcm",
+      "password": "123456789",
+      "multiplex": {}
     }
   ],
-    "outbound_providers": [
-        {
-            "type": "remote",
-            "path": "/etc/sing-box/providers/1.yaml",
-            "tag": "机场",
-            "healthcheck_url": "http://www.gstatic.com/generate_204",
-            "healthcheck_interval": "10m0s",
-            "download_url": "'"$suburl"'",
-            "download_ua": "clash.meta",
-            "download_interval": "24h0m0s",
-            "download_detour": "direct"
-        }
-    ],
-   "outbounds": [
+  "outbound_providers": [
+    {
+      "type": "remote",
+      "path": "/etc/sing-box/providers/1.yaml",
+      "tag": "🛫 机场",
+      "healthcheck_url": "http://www.gstatic.com/generate_204",
+      "healthcheck_interval": "10m0s",
+      "download_url": "'"$suburl"'",
+      "download_ua": "clash.meta",
+      "download_interval": "24h0m0s",
+      "download_detour": "direct"
+  }
+  ],
+  "outbounds": [
       {
          "type": "selector",
          "tag": "♻️ 手动选择",
          "providers": [
-            "机场"
+            "🛫 机场"
          ],
          "excludes": "Premium"
       },
@@ -228,6 +243,7 @@ mkdir /etc/sing-box/providers
             "🇭🇰 香港节点-urltest",
             "🇺🇲 美国节点-urltest",
             "🔰 其它节点-urltest",
+
             "🇯🇵 日本节点",
             "✨台湾节点",
             "🇸🇬 狮城节点",
@@ -242,6 +258,7 @@ mkdir /etc/sing-box/providers
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
+            
             "♻️ 手动选择",
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
@@ -285,6 +302,7 @@ mkdir /etc/sing-box/providers
          "type": "selector",
          "tag": "📲 电报消息",
          "outbounds": [
+        
             "🚀 节点选择",
             "♻️ 手动选择",
             "🇯🇵 日本节点-urltest",
@@ -307,6 +325,7 @@ mkdir /etc/sing-box/providers
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
+           
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -330,6 +349,7 @@ mkdir /etc/sing-box/providers
          "tag": "🍎 苹果服务",
          "outbounds": [
             "direct",
+            
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -376,6 +396,7 @@ mkdir /etc/sing-box/providers
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
+           
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -391,13 +412,14 @@ mkdir /etc/sing-box/providers
             "🔰 其它节点"
         ],
          "excludes": "Premium",
-        "default": "🇺🇲 美国节点-urltest"
+        "default": "🇺🇲 美国节点"
       },
       {
         "tag": "👤 Facebook",
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
+            
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -420,6 +442,7 @@ mkdir /etc/sing-box/providers
         "type": "selector",
         "outbounds": [
             "🚀 节点选择",
+           
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -442,6 +465,7 @@ mkdir /etc/sing-box/providers
         "type": "selector",
         "outbounds": [
             "direct",
+           
             "🇯🇵 日本节点-urltest",
             "✨台湾节点-urltest",
             "🇸🇬 狮城节点-urltest",
@@ -464,7 +488,7 @@ mkdir /etc/sing-box/providers
          "type": "urltest",
          "tag": "🔄 自动选择",
          "providers": [
-            "机场"
+            "🛫 机场"
          ],
          "excludes": "Premium",
          "idle_timeout": "30001h",
@@ -572,12 +596,15 @@ mkdir /etc/sing-box/providers
          "includes": "(?i)德国|DE|brd|germany|荷兰|NL|Netherlands|法国|FR|France|French Republic|澳大利亚|AU|Australia|迪拜|UAE|Dubai|印度|IN|India|KR|Korea|KOR|首尔|韩|韓|英国|UnitedKingdom|UK|英|瑞典|Sweden|SE|巴西|Brazil|BR|非洲|Africa|AF",
          "excludes": "Premium"
       },
+
+
       {
          "type": "selector",
          "tag": "🐟 漏网之鱼",
          "outbounds": "🚀 节点选择",
          "excludes": "Premium"
       }
+}
     ],
     "route": {
      "final": "🐟 漏网之鱼",
@@ -611,7 +638,7 @@ mkdir /etc/sing-box/providers
         "outbound": "direct"
       },
       {
-     1   "network": "udp",
+        "network": "udp",
         "port": 443,
         "outbound": "block"
       },
