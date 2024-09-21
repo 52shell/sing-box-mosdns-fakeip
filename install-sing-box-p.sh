@@ -1184,7 +1184,7 @@ install_sing_box_over() {
 
 ####安装完成，清理相关环境
 cd /root
-rm -rf install* sing-box*
+rm -rf install* sing-box* mosdns
 echo "=================================================================="
 echo -e "\t\t\tSing-Box 安装完毕"
 echo -e "\t\t\tPowered by www.herozmy.com 2024"
