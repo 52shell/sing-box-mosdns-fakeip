@@ -110,7 +110,7 @@ mkdir /etc/sing-box/providers
     },
     "cache_file": {
       "enabled": true,
-      "path": "etc/sing-box/cache.db",
+      "path": "/etc/sing-box/cache.db",
       "store_fakeip": true
     }
   },
@@ -135,7 +135,7 @@ mkdir /etc/sing-box/providers
         "inbound": "in-dns",
         "server": "fakeipDNS",
         "disable_cache": false,
-         "rewrite_ttl": 1
+        "rewrite_ttl": 1
       },
       {
         "outbound": "direct",
