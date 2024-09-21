@@ -2,7 +2,7 @@
 ################################编译 Sing-Box 的最新版本################################
 install_singbox() {
     apt update && apt -y upgrade || { echo "更新失败！退出脚本"; exit 1; }
-    apt install curl wget tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
+    apt install curl git wget tar gawk sed cron unzip nano -y || { echo "更新失败！退出脚本"; exit 1; }
     echo -e "\n设置时区为Asia/Shanghai"
     timedatectl set-timezone Asia/Shanghai || { echo -e "\e[31m时区设置失败！退出脚本\e[0m"; exit 1; }
     echo -e "\e[32m时区设置成功\e[0m"
@@ -73,7 +73,6 @@ ui_install(){
     echo "是否拉取ui源码 y/n"
     read choice
 if [ "$choice" = "y" ]; then
-    apt install git
     git clone https://github.com/metacubex/metacubexd.git -b gh-pages /etc/sing-box/ui
     
 elif [ "$choice" = "n" ]; then
@@ -84,8 +83,17 @@ fi
 }
 ################################开始创建config.json################################
 install_config() {
- mkdir  /etc/sing-box/providers
- mkdir -p /etc/sing-box/rule/geoip /etc/sing-box/rule/geosite
+
+####下载srs规则文件到rule目录，防止程序拉取不到，导致启动失败
+git init
+git remote add origin https://github.com/52shell/sing-box-mosdns-fakeip.git
+git config core.sparseCheckout true
+echo "rule" >> .git/info/sparse-checkout
+git pull origin main
+rm -rf .git
+mv /root/rule /etc/sing-box/
+mkdir /etc/sing-box/providers
+
  echo '
 {
   "log": {
@@ -114,11 +122,6 @@ install_config() {
         "detour": "direct"
       },
       {
-        "tag": "nodedns",
-        "address": "tls://223.6.6.6:853",
-        "detour": "direct"
-      },
-      {
         "tag": "fakeipDNS",
         "address": "fakeip"
       },
@@ -140,14 +143,14 @@ install_config() {
       },
       {
         "outbound": "any",
-        "server": "nodedns",
+        "server": "localDns",
         "disable_cache": false
       }
     ],
     "fakeip": {
       "enabled": true,
       "inet4_range": "28.0.0.0/8",
-      "inet6_range": "fc00::/18"
+      "inet6_range": "f2b0::/18"
     },
     "independent_cache": true,
     "lazy_cache": true,
@@ -608,7 +611,7 @@ install_config() {
         "outbound": "direct"
       },
       {
-        "network": "udp",
+     1   "network": "udp",
         "port": 443,
         "outbound": "block"
       },
@@ -1177,6 +1180,11 @@ check_interfaces() {
 
 ################################sing-box安装结束################################
 install_sing_box_over() {
+
+
+####安装完成，清理相关环境
+cd /root
+rm -rf install* sing-box*
 echo "=================================================================="
 echo -e "\t\t\tSing-Box 安装完毕"
 echo -e "\t\t\tPowered by www.herozmy.com 2024"
