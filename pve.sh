@@ -9,7 +9,7 @@ UseDNS no
 
 # 将配置写入 /etc/ssh/sshd_config.d/10-server-sshd.conf 文件
 echo "$CONFIG" | sudo tee /etc/ssh/sshd_config.d/10-server-sshd.conf > /dev/null
-
+sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 # 重启 SSH 服务
 sudo systemctl restart ssh.service
 
