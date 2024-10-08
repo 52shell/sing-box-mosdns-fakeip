@@ -82,7 +82,7 @@ check_uninstall() {
         echo ""
         echo "$system已安装，即将安装最新版本内核"
         if [[ $# == 0 ]]; then
-            install_singbox
+            install_singbox_p
         fi
         return 1
     else
