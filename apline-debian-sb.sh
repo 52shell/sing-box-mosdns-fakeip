@@ -299,10 +299,6 @@ fi
 
 # 写入tproxy rule    
 # 判断文件是否存在
-#!/bin/bash
-
-# 一次性判断系统类型并存储为全局变量
-SYSTEM_RELEASE=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2 | tr -d '"')
 
 if [[ "$SYSTEM_RELEASE" == "alpine" ]]; then
     # 检查 /etc/init.d/singbox-route 是否存在
