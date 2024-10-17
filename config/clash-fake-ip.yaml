@@ -74,7 +74,7 @@ NodeParam: &NodeParam {type: http, interval: 3600, health-check: {enable: true, 
 # 锚点 - 节点订阅
 proxy-providers: 
   sub1:
-    url: '$suburl'
+    url: '机场订阅'
     <<: *NodeParam
     path: './proxy_providers/sub1.yaml'
     override:
