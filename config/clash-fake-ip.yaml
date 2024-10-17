@@ -3,7 +3,6 @@ socks-port: 7891
 mixed-port: 7892
 redir-port: 7893
 tproxy-port: 7896
-
 unified-delay: true
 geodata-mode: false
 geodata-loader: standard
@@ -12,14 +11,16 @@ geo-update-interval: 24
 tcp-concurrent: true
 find-process-mode: strict
 global-client-fingerprint: chrome
-
+bind-address: "*"
 allow-lan: true
+routing-mark: 1
+interface-name: eth0
 mode: rule
 log-level: info
 ipv6: true
 udp: true
 
-external-controller: 0.0.0.0:9090
+external-controller: :9090
 external-ui: /etc/mihomo/ui
 external-ui-url: 'https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
 
@@ -69,16 +70,17 @@ dns:
     - https://223.6.6.6/dns-query#h3=true
 
 # 锚点 - 节点订阅的参数 [每小时更新一次订阅节点，每 6 秒一次健康检查]
-NodeParam: &NodeParam {type: http, interval: 3600, health-check: {enable: true, url: 'http://cp.cloudflare.com', interval: 6}}
+NodeParam: &NodeParam {type: http, interval: 3600, health-check: {enable: true, url: 'http://detectportal.firefox.com/success.txt', interval: 6}}
 
 # 锚点 - 节点订阅
 proxy-providers: 
-  sub1:
+  机场名称1:
     url: '机场订阅'
     <<: *NodeParam
-    path: './proxy_providers/sub1.yaml'
+    path: './proxy_providers/sub.yaml'
     override:
-      additional-prefix: "[sub1] "
+      additional-prefix: "[sub] "
+
 
 # 锚点 - 节点筛选组
 FilterHK: &FilterHK '^(?=.*((?i)🇭🇰|香港|(\b(HK|Hong)\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$'
@@ -95,13 +97,13 @@ FilterAll: &FilterAll '^(?=.*(.))(?!.*((?i)群|邀请|返利|循环|官网|客�
 
 # 策略组参数锚点
 # 锚点 - 时延优选参数 [每 6 秒一次惰性健康检查，容差 20ms，时延超过 2 秒判定为失败，失败 3 次则自动触发健康检查]
-UrlTest: &UrlTest {type: url-test, interval: 6, tolerance: 20, lazy: true, url: 'http://cp.cloudflare.com', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
+UrlTest: &UrlTest {type: url-test, interval: 6, tolerance: 20, lazy: true, url: 'http://detectportal.firefox.com/success.txt', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
 # 锚点 - 故障转移参数 [每 6 秒一次惰性健康检查，时延超过 2 秒判定为失败，失败 3 次则自动触发健康检查]
-FallBack: &FallBack {type: fallback, interval: 6, lazy: true, url: 'http://cp.cloudflare.com', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
+FallBack: &FallBack {type: fallback, interval: 6, lazy: true, url: 'http://detectportal.firefox.com/success.txt', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
 # 锚点 - 负载均衡参数 [每 6 秒一次惰性健康检查，时延超过 2 秒判定为失败，失败 3 次则自动触发健康检查]
-LoadBalance: &LoadBalance {type: load-balance, interval: 6, lazy: true, url: 'http://cp.cloudflare.com', disable-udp: false, strategy: consistent-hashing, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
+LoadBalance: &LoadBalance {type: load-balance, interval: 6, lazy: true, url: 'http://detectportal.firefox.com/success.txt', disable-udp: false, strategy: consistent-hashing, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
 # 锚点 - 规则参数 [每小时更新一次订阅规则，更新规则时使用直连策略]
-RuleProviders: &RuleProviders {type: http, behavior: classical, interval: 3600, format: yaml, proxy: DIRECT}
+RuleProviders: &RuleProviders {type: http, behavior: classical, interval: 3600, format: yaml, proxy: 香港策略}
 
 # 策略组
 proxy-groups: 
@@ -168,7 +170,7 @@ rule-providers:
   Lan:
     <<: *RuleProviders
     path: './rules/Lan.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/Lan/Lan.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Lan/Lan.yaml'
 
   Direct:
     <<: *RuleProviders
@@ -213,12 +215,12 @@ rule-providers:
   Steam:
     <<: *RuleProviders
     path: './rules/Steam.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/Steam/Steam.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.yaml'
 
   Netflix:
     <<: *RuleProviders
     path: './rules/Netflix.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/Netflix/Netflix.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.yaml'
 
   Emby:
     <<: *RuleProviders
@@ -253,17 +255,17 @@ rule-providers:
   TestFlight:
     <<: *RuleProviders
     path: './rules/TestFlight.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/TestFlight/TestFlight.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/TestFlight/TestFlight.yaml'
 
   Microsoft:
     <<: *RuleProviders
     path: './rules/Microsoft.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/Microsoft/Microsoft.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.yaml'
 
   Google:
     <<: *RuleProviders
     path: './rules/Google.yaml'
-    url: 'https://gitlab.com/lodepuly/proxy_tool_resources/-/raw/master/rule/Clash/Google/Google.yaml'
+    url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Google/Google.yaml'
 
   Telegram:
     <<: *RuleProviders
