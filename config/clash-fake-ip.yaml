@@ -20,7 +20,7 @@ ipv6: true
 udp: true
 
 external-controller: 0.0.0.0:9090
-external-ui: /etc/clash/ui
+external-ui: /etc/mihomo/ui
 external-ui-url: 'https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip'
 
 geox-url:
