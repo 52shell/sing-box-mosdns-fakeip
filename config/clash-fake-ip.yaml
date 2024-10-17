@@ -103,7 +103,7 @@ FallBack: &FallBack {type: fallback, interval: 6, lazy: true, url: 'http://detec
 # 锚点 - 负载均衡参数 [每 6 秒一次惰性健康检查，时延超过 2 秒判定为失败，失败 3 次则自动触发健康检查]
 LoadBalance: &LoadBalance {type: load-balance, interval: 6, lazy: true, url: 'http://detectportal.firefox.com/success.txt', disable-udp: false, strategy: consistent-hashing, timeout: 2000, max-failed-times: 3, hidden: true, include-all-providers: true}
 # 锚点 - 规则参数 [每小时更新一次订阅规则，更新规则时使用直连策略]
-RuleProviders: &RuleProviders {type: http, behavior: classical, interval: 3600, format: yaml, proxy: 香港策略}
+RuleProviders: &RuleProviders {type: http, behavior: classical, interval: 86400, format: yaml, proxy: 香港策略}
 
 # 策略组
 proxy-groups: 
