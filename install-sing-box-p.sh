@@ -88,10 +88,10 @@ install_config() {
 git init
 git remote add origin https://github.com/52shell/sing-box-mosdns-fakeip.git
 git config core.sparseCheckout true
-echo "rule" >> .git/info/sparse-checkout
+echo "singbox_rule" >> .git/info/sparse-checkout
 git pull origin main
 rm -rf .git
-mv /root/rule /etc/sing-box/
+mv /root/singbox_rule /etc/sing-box/rule
 mkdir /etc/sing-box/providers
 
  echo '
