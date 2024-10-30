@@ -1,0 +1,444 @@
+# 整个文件夹放入/etc/下给权限，调试命令 /usr/bin/mosdns start -c /etc/mosdns/config_custom.yaml -d /etc/mosdns
+# 后台运行命令 nohup  /usr/bin/mosdns start -c /etc/mosdns/config_custom.yaml -d /etc/mosdns > /tmp/mosdnsstart.log 2>&1  &
+# 搜索修改点3个字，替换为自己的配置信息
+# 搜索 28.0.0.0/8 fc00::/18 修改为自己的fakeip段
+# 基本逻辑 国内域名列表国内dns解析；国外域名列表直接发fakeip；列表外域名先带ecs走8888解析
+# 列表外域名没有返回IP、返回rcode 2 3 5的情况使用1111不带ecs再次解析
+# 国内域名A记录也没有IP的，走列表外逻辑再解析，解决c.mi.com的问题
+
+log:
+  level: warn
+  file: "/tmp/mosdns.log"
+
+api:
+  http: "0.0.0.0:9099"
+
+include: []
+
+plugins:
+#中国域名列表的过期缓存
+  - tag: cache_all
+    type: cache
+    args:
+      size: 20000000
+      lazy_cache_ttl: 259200000
+      dump_file: /etc/mosdns/cache_all.dump
+      dump_interval: 3600
+
+#中国域名列表的过期缓存
+  - tag: cache_cn
+    type: cache
+    args:
+      size: 20000000
+      lazy_cache_ttl: 259200000
+      dump_file: /etc/mosdns/cache_cn.dump
+      dump_interval: 36000
+
+#列表外域名的过期缓存
+  - tag: cache_google
+    type: cache
+    args:
+      size: 20000000
+      lazy_cache_ttl: 259200000
+      dump_file: /etc/mosdns/cache_google.dump
+      dump_interval: 36000
+
+#列表外域名的过期缓存
+  - tag: cache_cf
+    type: cache
+    args:
+      size: 20000000
+      lazy_cache_ttl: 259200000
+      dump_file: /etc/mosdns/cache_cf.dump
+      dump_interval: 3600
+
+#节点域名列表的过期缓存
+  - tag: cache_node
+    type: cache
+    args:
+      size: 20000000
+      lazy_cache_ttl: 259200000
+      dump_file: /etc/mosdns/cache_node.dump
+      dump_interval: 36000
+
+#中国域名列表
+  - tag: geosite_cn
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/geosite_cn.txt"
+#中国IP列表
+  - tag: geoip_cn
+    type: ip_set
+    args:
+      files:
+        - "/etc/mosdns/rule/geoip_cn.txt"
+
+#国外域名列表
+  - tag: geosite_no_cn
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/geosite_geolocation-!cn.txt"
+
+#自定义白名单域名列表
+  - tag: whitelist
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/whitelist.txt"
+
+#屏蔽域名列表
+  - tag: blocklist
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/blocklist.txt"
+
+#自定义强制代理域名列表
+  - tag: greylist
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/greylist.txt"
+
+#自定义hosts域名列表
+  - tag: hosts
+    type: hosts
+    args:
+      files:
+        - "/etc/mosdns/rule/hosts.txt"
+
+#转发dns请求到google dns
+  - tag: forward_google
+    type: forward
+    args:
+      concurrent: 1
+      upstreams:
+        - addr: "tls://8.8.8.8"    #不要改，只有tls和tcp支持pipeline
+          #socks5: "127.0.0.1:7891"  #修改点 改为自己的socks5，sb作为网关的可以删除此行
+          enable_pipeline: true
+          insecure_skip_verify: true
+
+#转发dns请求到cf dns
+  - tag: forward_cf
+    type: forward
+    args:
+      concurrent: 1
+      upstreams:
+        - addr: "tls://1.1.1.1" #不要改，只有tls和tcp支持pipeline
+          #socks5: "127.0.0.1:7891"  #修改点 改为自己的socks5，sb作为网关的可以删除此行
+          enable_pipeline: true
+          insecure_skip_verify: true
+
+#转发请求到阿里dns
+  - tag: forward_local
+    type: forward
+    args:
+      concurrent: 2
+      upstreams:
+        - addr: "https://dns.alidns.com/dns-query"   #修改点 可以换为自己的私有doh
+          dial_addr: "223.5.5.5"
+          insecure_skip_verify: true
+          enable_http3: true          #确实支持h3，已测试
+        - addr: "quic://223.5.5.5"  #QUIC牛逼
+
+#转发请求至sing-box/mihome dns请求fakeip
+  - tag: forward_fakeip
+    type: forward
+    args:
+      concurrent: 1
+      upstreams:
+        - addr: 10.10.10.147:6666    #修改点 换为自己的sb/mihomo fakeip dns
+
+#过期缓存在域名TTL过期后～lazy_cache_ttl时间段内被更新
+#请求时马上返回结果，同时后台异步更新缓存
+#异步更新时，新进程执行$cache_cn后面的逻辑去获取IP
+#$调用序列会异步调用，被调用的序列内accept
+#只会结束被调用的序列
+#过期缓存是上次请求时的结果，不一定符合本次的ecs信息
+
+#缓存序列-国内域名
+  - tag: sequence_local
+    type: sequence
+    args:
+      - exec: drop_resp      #丢弃用于标记的blackhole ip
+      - exec: $cache_cn
+      - matches: has_resp
+        exec: accept
+      - exec: ecs 2408:8214:213::1  #修改点 公网IP 无须更新 使用/48段 使用自己的V6让chatgpt转换
+      - exec: $forward_local
+      - matches:
+        - "rcode 0"
+        - "qtype 1 28"
+        - "!resp_ip 0.0.0.0/0 2000::/3"
+        exec: ttl 60000
+      - matches: has_resp
+        exec: accept
+
+#缓存序列-列表外域名
+  - tag: sequence_google
+    type: sequence
+    args:
+      - exec: $cache_google
+      - matches: has_resp
+        exec: accept
+      - exec: ecs 2408:8214:213::1  #修改点 使用自己的公网IP，无须更新
+      - exec: $forward_google
+      - matches:
+        - "rcode 0"
+        - "qtype 1 28"
+#        - "!resp_ip 0.0.0.0/0 2000::/3"
+        exec: ttl 60000
+      - matches: has_resp
+        exec: accept
+
+#缓存序列-列表外域名
+  - tag: sequence_cf
+    type: sequence
+    args:
+      - exec: $cache_cf
+      - matches: has_resp
+        exec: accept
+      - exec: $forward_cf
+      - matches:
+        - "rcode 0"
+        - "qtype 1 28"
+#        - "!resp_ip 0.0.0.0/0 2000::/3"
+        exec: ttl 60000
+      - matches: has_resp
+        exec: accept
+
+#列表外的域名的处理逻辑
+#先带ecs到8888，如果返回235，就用cf再查一次，如果还返回235
+#25的情况用223再查，3的情况返回no error
+  - tag: sequence_not_in_list
+    type: sequence
+    args:
+      - exec: drop_resp      #丢弃用于标记的blackhole ip
+      - exec: $sequence_google #表外域名先带ecs发到8888
+      - matches: "!resp_ip 0.0.0.0/0 2000::/3"   #rcode 235及没有IP等情况
+        exec: mark 123 #标记
+      - matches: mark 123
+        exec: drop_resp      #丢弃结果
+      - matches: mark 123
+        exec: $sequence_cf      #cf dns再查一次
+      - matches: "rcode 3"   #失败或者拒绝
+        exec: ttl 60000
+      - matches: "rcode 3"   #没有域名
+        exec: reject 0
+      - matches: "rcode 2 5"   #失败或者拒绝
+        exec: mark 456 #失败拒绝标记
+      - matches: mark 456
+        exec: drop_resp      #丢弃结果
+      - matches: mark 456  #只有rcode 2 5需要到国内查询，rcode3 会接受结果
+        exec: $sequence_local      #SERVFAIL用国内dns再查一次
+      - matches: "rcode 2 3 5"   #失败或者拒绝
+        exec: mark 789 #失败拒绝标记
+      - matches: mark 789
+        exec: drop_resp      #丢弃结果
+      - matches: mark 789
+        exec: $forward_fakeip     #请求fakeip返回
+      - matches: "resp_ip 28.0.0.0/8 fc00::/18"
+        exec: accept                      #fakeip就接受
+      - matches: "!resp_ip 0.0.0.0/0 2000::/3"
+        exec: accept                      #再没有IP返回就把结果返回给客户端
+      - matches: "!resp_ip $geoip_cn"
+        exec: $forward_fakeip     #如果是国外IP，就请求fakeip返回
+      - matches: has_resp
+        exec: accept
+
+#用本地dns查询
+  - tag: query_is_local_dns
+    type: sequence
+    args:
+      - matches: qname $whitelist
+        exec: black_hole 127.0.0.1 ::1
+      - matches: qname $geosite_cn
+        exec: black_hole 127.0.0.1 ::1
+
+#fallback并发primary和secondary都没有IP返回，会抛出错误
+#导致后续逻辑无法执行，在secondary中使用black_hole给假
+#ip作为标记供后续判断
+
+#国外域名列表/灰名单直接请求fakeip
+  - tag: query_is_fakeip
+    type: sequence
+    args:
+      - matches: qname $geosite_no_cn
+        exec: black_hole 127.0.0.2 ::2
+      - matches: "!resp_ip 127.0.0.2 ::2"
+        exec: black_hole 127.0.0.3 ::3
+
+#列表内域名国内国外并发匹配，结果是black_hole的即列表外域名
+  - tag: conc_lookup
+    type: fallback
+    args:
+      primary: query_is_local_dns
+      secondary: query_is_fakeip
+      threshold: 0
+      always_standby: true
+
+#主分流序列
+  - tag: sequence_main
+    type: sequence
+    args:
+      - matches: "qtype 12 65"
+        exec: reject 0
+      - matches: qname $blocklist
+        exec: reject 0
+      - exec: $hosts
+      - matches: has_resp
+        exec: accept
+      - exec: $cache_all
+      - matches: "qtype 16 33"
+        exec: $forward_google
+      - matches:
+        - has_resp
+        - "!resp_ip 127.0.0.1 ::1"
+        exec: accept
+      - matches: qname $greylist
+        exec: $forward_fakeip
+      - matches: has_resp
+        exec: accept
+      - exec: $conc_lookup
+      - matches: "resp_ip 127.0.0.1 ::1"
+        exec: $sequence_local
+      - matches: "resp_ip 127.0.0.2 ::2"
+        exec: $forward_fakeip
+      - matches: "resp_ip 28.0.0.0/8 fc00::/18"
+        exec: accept                      #fakeip就接受
+      - matches:
+        - has_resp
+        - "!qtype 1"  #非A的只要不是黑洞IP，有没有IP都接受
+        - "!resp_ip 127.0.0.1 ::1 127.0.0.2 ::2 127.0.0.3 ::3"
+        exec: accept
+      - matches:
+        - has_resp
+        - "qtype 1"  #A的不是黑洞IP，有正经IP才接受
+        - "resp_ip 0.0.0.0/0 2000::/3"
+        - "!resp_ip 127.0.0.1 ::1 127.0.0.2 ::2 127.0.0.3 ::3"
+        exec: accept
+      - exec: $sequence_not_in_list  #其它走表外逻辑
+
+#处理列表外域名的缓存序列
+  - tag: sequence_google_forsbnode
+    type: sequence
+    args:
+      - exec: $cache_node
+      - matches: has_resp
+        exec: accept
+      - exec: ecs 2408:8214:213::1  #修改点 同上
+      - exec: $forward_google
+
+#专门用于解析域名节点，默认使用8888解析，300毫秒不通用换223解析
+  - tag: sbnodefallback
+    type: fallback
+    args:
+      primary: sequence_google_forsbnode
+      secondary: sequence_local
+      threshold: 300
+      always_standby: false
+
+  - tag: sequence_sbnode
+    type: sequence
+    args:
+      - exec: $sbnodefallback
+
+#用于sing-box的分流序列，只返回real ip
+  - tag: sequence_sb
+    type: sequence
+    args:
+      - matches: "qtype 12 65"
+        exec: reject 0
+#      - matches: "!qtype 1 5 16 28 33"
+#        exec: reject 0
+      - matches: qname $blocklist
+        exec: reject 0
+      - matches: qname $whitelist
+        exec: $sequence_local
+      - matches: has_resp
+        exec: accept
+      - matches: qname $greylist  #cn列表中强制代理的
+        exec: $sequence_google
+      - matches: has_resp
+        exec: accept
+      - matches: qname $geosite_cn
+        exec: $sequence_local
+      - matches: has_resp
+        exec: accept
+      - matches: "qtype 16 33"
+        exec: $forward_google
+      - matches: has_resp
+        exec: accept
+      - exec: $sequence_google
+      - matches: "rcode 2 3 5"   #失败或者拒绝
+        exec: mark 123 #失败拒绝标记
+      - matches: mark 123
+        exec: drop_resp      #丢弃结果
+      - matches: mark 123
+        exec: $sequence_cf      #NXDomain用cf dns再查一次
+      - matches: "rcode 3"   #失败或者拒绝
+        exec: ttl 60000
+      - matches: "rcode 3"   #没有域名
+        exec: reject 0
+      - matches: "rcode 2 5"   #失败或者拒绝
+        exec: mark 456 #失败拒绝标记
+      - matches: mark 456
+        exec: drop_resp      #丢弃结果
+      - matches: mark 456
+        exec: $sequence_local      #SERVFAIL用国内dns再查一次
+
+####################对外服务端口定义部分############
+#解析节点域名的服务器
+  - tag: sbnode_udp
+    type: udp_server
+    args:
+      entry: sequence_sbnode
+      listen: ":7777"
+
+  - tag: sbnode_tcp
+    type: tcp_server
+    args:
+      entry: sequence_sbnode
+      listen: ":7777"
+
+#sing-box使用的服务器
+  - tag: sb_udp
+    type: udp_server
+    args:
+      entry: sequence_sb
+      listen: ":8888"
+
+  - tag: sb_tcp
+    type: tcp_server
+    args:
+      entry: sequence_sb
+      listen: ":8888"
+
+#国内ecs
+  - tag: udp_local
+    type: udp_server
+    args:
+      entry: sequence_local
+      listen: ":2222"
+
+#国外ecs
+  - tag: udp_google
+    type: udp_server
+    args:
+      entry: sequence_google
+      listen: ":3333"
+
+#主分流服务器
+  - tag: udp_main
+    type: udp_server
+    args:
+      entry: sequence_main
+      listen: ":5454"    #修改点 改为自己需要的端口 比如53
+
+  - tag: tcp_main
+    type: tcp_server
+    args:
+      entry: sequence_main
+      listen: ":5454" #修改点 改为自己需要的端口 比如53

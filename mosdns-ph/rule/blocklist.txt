@@ -1,0 +1,14 @@
+full:trace-server.prod-clustered.bugs.firebat.prime-video.amazon.dev
+full:xmbc.highrez.co.uk
+domain:jddebug.com
+domain:mdbook.cn
+domain:jsqmt.qq.com
+domain:t-ring-fallbacks2.msedge.net
+domain:init.phpwind.net
+domain:cdn.bootcss.com
+domain:cdn.bootcdn.net
+domain:cdn.staticfile.net
+domain:cdn.staticfile.org
+domain:cdn.polyfill.io
+full:chenmeideiphone
+full:phil14plus
