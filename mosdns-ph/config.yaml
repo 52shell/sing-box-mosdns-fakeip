@@ -1,11 +1,3 @@
-# 整个文件夹放入/etc/下给权限，调试命令 /usr/bin/mosdns start -c /etc/mosdns/config_custom.yaml -d /etc/mosdns
-# 后台运行命令 nohup  /usr/bin/mosdns start -c /etc/mosdns/config_custom.yaml -d /etc/mosdns > /tmp/mosdnsstart.log 2>&1  &
-# 搜索修改点3个字，替换为自己的配置信息
-# 搜索 28.0.0.0/8 fc00::/18 修改为自己的fakeip段
-# 基本逻辑 国内域名列表国内dns解析；国外域名列表直接发fakeip；列表外域名先带ecs走8888解析
-# 列表外域名没有返回IP、返回rcode 2 3 5的情况使用1111不带ecs再次解析
-# 国内域名A记录也没有IP的，走列表外逻辑再解析，解决c.mi.com的问题
-
 log:
   level: warn
   file: "/tmp/mosdns.log"
@@ -239,7 +231,7 @@ plugins:
         exec: drop_resp      #丢弃结果
       - matches: mark 789
         exec: $forward_fakeip     #请求fakeip返回
-      - matches: "resp_ip 28.0.0.0/8 fc00::/18"
+      - matches: "resp_ip 28.0.0.0/8 f2b0::/18"
         exec: accept                      #fakeip就接受
       - matches: "!resp_ip 0.0.0.0/0 2000::/3"
         exec: accept                      #再没有IP返回就把结果返回给客户端
@@ -306,7 +298,7 @@ plugins:
         exec: $sequence_local
       - matches: "resp_ip 127.0.0.2 ::2"
         exec: $forward_fakeip
-      - matches: "resp_ip 28.0.0.0/8 fc00::/18"
+      - matches: "resp_ip 28.0.0.0/8 f2b0::/18"
         exec: accept                      #fakeip就接受
       - matches:
         - has_resp
@@ -389,56 +381,15 @@ plugins:
       - matches: mark 456
         exec: $sequence_local      #SERVFAIL用国内dns再查一次
 
-####################对外服务端口定义部分############
-#解析节点域名的服务器
-  - tag: sbnode_udp
-    type: udp_server
-    args:
-      entry: sequence_sbnode
-      listen: ":7777"
-
-  - tag: sbnode_tcp
-    type: tcp_server
-    args:
-      entry: sequence_sbnode
-      listen: ":7777"
-
-#sing-box使用的服务器
-  - tag: sb_udp
-    type: udp_server
-    args:
-      entry: sequence_sb
-      listen: ":8888"
-
-  - tag: sb_tcp
-    type: tcp_server
-    args:
-      entry: sequence_sb
-      listen: ":8888"
-
-#国内ecs
-  - tag: udp_local
-    type: udp_server
-    args:
-      entry: sequence_local
-      listen: ":2222"
-
-#国外ecs
-  - tag: udp_google
-    type: udp_server
-    args:
-      entry: sequence_google
-      listen: ":3333"
-
 #主分流服务器
   - tag: udp_main
     type: udp_server
     args:
       entry: sequence_main
-      listen: ":5454"    #修改点 改为自己需要的端口 比如53
+      listen: ":53"    #修改点 改为自己需要的端口 比如53
 
   - tag: tcp_main
     type: tcp_server
     args:
       entry: sequence_main
-      listen: ":5454" #修改点 改为自己需要的端口 比如53
+      listen: ":53" #修改点 改为自己需要的端口 比如53
