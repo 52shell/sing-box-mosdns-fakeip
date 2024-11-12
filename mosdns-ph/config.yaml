@@ -108,7 +108,7 @@ plugins:
       concurrent: 1
       upstreams:
         - addr: "tls://8.8.8.8"    #不要改，只有tls和tcp支持pipeline
-          #socks5: "127.0.0.1:7891"  #修改点 改为自己的socks5，sb作为网关的可以删除此行
+          #socks5: "127.0.0.1:7891"  #修改点 改为自己的socks5，sb作为网关的可以删除此行1
           enable_pipeline: true
           insecure_skip_verify: true
 
