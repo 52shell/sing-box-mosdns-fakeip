@@ -26,7 +26,7 @@ wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/insta
 
 更新记录：
 
-增加写入快捷方式：
+增加写入快捷 方式：
 ``` shell
  wget -O /usr/bin/fake https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake.sh && chmod +x /usr/bin/fake
 ```
