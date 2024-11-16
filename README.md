@@ -1,6 +1,6 @@
 # install mosdns&sing-box fakeip模式
 
-## herozmy特解鸣谢:
+## 特解鸣谢:
 * @Panicpanic
 
 
