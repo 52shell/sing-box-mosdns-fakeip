@@ -1,7 +1,7 @@
 #!/bin/bash
 ##定义地址
 rm -rf $0
-script_host=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip
+script_host=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip
 tag=main
 sub_host="https://sub-singbox.herozmy.com"
 file_host="https://file.herozmy.com"
@@ -10,7 +10,7 @@ mkdir -p /tmp/install
 tmpcache=tmp/install
 download_dir="/tmp/moddnsui"
 mkdir -p "$download_dir"
-github_fake="https://github.com/52shell/sing-box-mosdns-fakeip.git"
+github_fake="https://github.com/herozmy/sing-box-mosdns-fakeip.git"
 prometheus_url="https://github.com/prometheus/prometheus/releases"
 loki_url="https://github.com/grafana/loki/releases"
 local_ip=$(hostname -I | awk '{print $1}')
@@ -420,7 +420,7 @@ else
 fi
 echo "系统架构是：$arch"
     #拉取github每日凌晨自动编译的核心
-    wget -O /${tmpcache}/sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/52shell/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
+    wget -O /${tmpcache}/sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/herozmy/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
     sleep 1
     echo -e "下载完成，开始安装"
     sleep 1
@@ -485,7 +485,7 @@ install_mihomo_config() {
     sleep 1
     mkdir -p /etc/${selected_option}
     cd /etc/${selected_option}
-    wget -O config.yaml https://github.com/52shell/sing-box-mosdns-fakeip/raw/refs/heads/main/config/clash-fake-ip.yaml
+    wget -O config.yaml https://github.com/herozmy/sing-box-mosdns-fakeip/raw/refs/heads/main/config/clash-fake-ip.yaml
     sed -i "s|url: '机场订阅'|url: '$suburl'|" /etc/mihomo/config.yaml
     sed -i "s|interface-name: eth0|interface-name: $selected_interface|" /etc/mihomo/config.yaml
 }
@@ -499,9 +499,9 @@ install_singbox_config() {
     # 如果用户没有输入选择，则默认为1
     choice=${choice:-1}
     if [ $choice -eq 1 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/config/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/config/fake-ip.json"
     elif [ $choice -eq 2 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/fake-ip.json"
     else
         echo "无效的选择。"
         return 1
@@ -522,7 +522,7 @@ install_singbox_p_config(){
 # git拉取 srs文件，防止启动失败
 (
     git init >/dev/null 2>&1 &&
-    git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git &&
+    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git &&
     git config core.sparsecheckout true &&
     echo 'singbox_rule' > .git/info/sparse-checkout &&
     git pull origin main
@@ -895,7 +895,7 @@ echo -e "Mihomo一键安装"
     esac
     echo "系统架构是：$arch"
     #拉取github每日凌晨自动编译的核心
-    wget -O mihomo-linux-$arch.tar.gz  https://raw.githubusercontent.com/52shell/herozmy-private/main/mihomo-alpha/mihomo-linux-$arch.tar.gz
+    wget -O mihomo-linux-$arch.tar.gz  https://raw.githubusercontent.com/herozmy/herozmy-private/main/mihomo-alpha/mihomo-linux-$arch.tar.gz
     sleep 1
     echo -e "下载完成，开始安装"
     sleep 1
@@ -912,7 +912,7 @@ echo -e "\t\t\tPowered by www.herozmy.com 2024"
 echo -e "\n"
 echo -e "singbox运行目录为/etc/sing-box"
 echo -e "singbox WebUI地址:http://ip:9090"
-echo -e "Mosdns配置脚本：wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.sh && bash mosdns-o.sh"
+echo -e "Mosdns配置脚本：wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/mosdns-o.sh && bash mosdns-o.sh"
 echo -e "温馨提示:\n本脚本仅在 LXC ubuntu22.04 环境下测试，其他环境未经验证，仅供个人使用"
 echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
 echo "=================================================================="
@@ -1073,7 +1073,7 @@ install_mosdns_config(){
     1)
    (
     git init >/dev/null 2>&1 &&
-    git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git &&
+    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git &&
     git config core.sparsecheckout true &&
     echo 'mosdns' > .git/info/sparse-checkout &&
     git pull origin main
@@ -1082,7 +1082,7 @@ install_mosdns_config(){
     2)
  (
     git init >/dev/null 2>&1 &&
-    git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git &&
+    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git &&
     git config core.sparsecheckout true &&
     echo 'mosdns-ph' > .git/info/sparse-checkout &&
     git pull origin main

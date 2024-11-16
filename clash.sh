@@ -89,7 +89,7 @@ check_interfaces
 echo "系统架构是：$arch"
 
     #拉取github每日凌晨自动编译的核心
-    wget -O mihomo-linux-$arch.tar.gz  https://raw.githubusercontent.com/52shell/herozmy-private/main/mihomo-alpha/mihomo-linux-$arch.tar.gz
+    wget -O mihomo-linux-$arch.tar.gz  https://raw.githubusercontent.com/herozmy/herozmy-private/main/mihomo-alpha/mihomo-linux-$arch.tar.gz
     sleep 1
     echo -e "下载完成，开始安装"
     sleep 1

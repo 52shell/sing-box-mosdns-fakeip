@@ -32,7 +32,7 @@
     echo "配置mosdns规则"
     sleep 1
     git init
-    git remote add -f origin https://github.com/52shell/sing-box-mosdns-fakeip.git
+    git remote add -f origin https://github.com/herozmy/sing-box-mosdns-fakeip.git
     git config core.sparsecheckout true
     echo 'mosdns' > .git/info/sparse-checkout
     git pull origin main

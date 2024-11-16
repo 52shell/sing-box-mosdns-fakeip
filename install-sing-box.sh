@@ -103,9 +103,9 @@ install_config() {
     # 如果用户没有输入选择，则默认为1
     choice=${choice:-1}
     if [ $choice -eq 1 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/config/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/config/fake-ip.json"
     elif [ $choice -eq 2 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/fake-ip.json"
     else
         echo "无效的选择。"
         return 1
@@ -338,7 +338,7 @@ echo -e "\n"
 echo -e "singbox运行目录为/etc/sing-box"
 echo -e "singbox WebUI地址:http://ip:9090"
 echo -e "singbox快捷指令: fake "
-echo -e "Mosdns配置脚本: wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.sh && bash mosdns-o.sh"
+echo -e "Mosdns配置脚本: wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/mosdns-o.sh && bash mosdns-o.sh"
 echo -e "温馨提示:\n本脚本仅在 LXC ubuntu22.04 环境下测试，其他环境未经验证，仅供个人使用"
 echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
 echo "=================================================================="

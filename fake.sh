@@ -151,7 +151,7 @@ install_singbox() {
         fi
     else
         # 如果不存在旧版本，则直接安装新版本
-        wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box.sh && bash install-sing-box.sh
+        wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/install-sing-box.sh && bash install-sing-box.sh
     fi
 }
 
@@ -170,7 +170,7 @@ install_singbox_p() {
     echo "系统架构是：$arch"
 
     #拉取github每日凌晨自动编译的核心
-    wget -O sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/52shell/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
+    wget -O sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/herozmy/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
     sleep 1
     echo -e "下载完成，开始安装"
     sleep 1
@@ -192,7 +192,7 @@ install_singbox_p() {
         fi
     else
         # 如果不存在旧版本，则直接安装新版本
-        wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box-p.sh && bash install-sing-box-p.sh
+        wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/install-sing-box-p.sh && bash install-sing-box-p.sh
     fi
 }
 
@@ -240,9 +240,9 @@ sub_config(){
     # 如果用户没有输入选择，则默认为1
     choice=${choice:-1}
     if [ $choice -eq 1 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/config/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/config/fake-ip.json"
     elif [ $choice -eq 2 ]; then
-        json_file="&file=https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake-ip.json"
+        json_file="&file=https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/fake-ip.json"
     else
         echo "无效的选择。"
         return 1
@@ -406,7 +406,7 @@ while true; do
         break
     elif [[ $choice -eq 3 ]]; then
         rm -rf /usr/bin/fake
-        wget -O /usr/bin/fake https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake.sh
+        wget -O /usr/bin/fake https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/fake.sh
         chmod +x /usr/bin/fake
         exit 0
     elif [[ $choice -eq 0 ]]; then

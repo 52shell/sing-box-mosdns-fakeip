@@ -33,27 +33,27 @@ echo "6. mihomo (clash meta)"
 read choice
 case $choice in
     1)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/install-sing-box.sh >/dev/null 2>&1
 bash install-sing-box.sh
         ;;
     2)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-o.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/mosdns-o.sh >/dev/null 2>&1
 bash mosdns-o.sh
         ;;
     3)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install-sing-box-p.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/install-sing-box-p.sh >/dev/null 2>&1
 bash install-sing-box-p.sh
         ;;
     #4)
-#wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
+#wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/mosdns-p.sh >/dev/null 2>&1
 #bash mosdns-p.sh
        # ;;
     5)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/hy2-gohome.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/hy2-gohome.sh >/dev/null 2>&1
 bash hy2-gohome.sh
         ;;
     6)
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/clash.sh >/dev/null 2>&1
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/clash.sh >/dev/null 2>&1
 bash clash.sh
         ;;
     *)

@@ -20,7 +20,7 @@ fi
 echo "系统架构是：$arch"
 
     #拉取github每日凌晨自动编译的核心
-    wget -O sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/52shell/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
+    wget -O sing-box-linux-$arch.tar.gz  https://raw.githubusercontent.com/herozmy/herozmy-private/main/sing-box-puernya/sing-box-linux-$arch.tar.gz
     sleep 1
     echo -e "下载完成，开始安装"
     sleep 1
@@ -86,7 +86,7 @@ install_config() {
 
 ####下载srs规则文件到rule目录，防止程序拉取不到，导致启动失败
 git init
-git remote add origin https://github.com/52shell/sing-box-mosdns-fakeip.git
+git remote add origin https://github.com/herozmy/sing-box-mosdns-fakeip.git
 git config core.sparseCheckout true
 echo "singbox_rule" >> .git/info/sparse-checkout
 git pull origin main
@@ -1217,7 +1217,7 @@ echo -e "\t\t\tPowered by www.herozmy.com 2024"
 echo -e "\n"
 echo -e "singbox运行目录为/etc/sing-box"
 echo -e "singbox WebUI地址:http://ip:9090"
-echo -e "Mosdns配置脚本：wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/mosdns-p.sh && bash mosdns-p.sh"
+echo -e "Mosdns配置脚本：wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/mosdns-p.sh && bash mosdns-p.sh"
 echo -e "温馨提示:\n本脚本仅在 LXC ubuntu22.04 环境下测试，其他环境未经验证，仅供个人使用"
 echo -e "本脚本仅适用于学习与研究等个人用途，请勿用于任何违反国家法律的活动！"
 echo "=================================================================="
