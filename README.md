@@ -19,7 +19,7 @@ sing-box有两版内核分别:
 支持:amd64 arm64
 多合一脚本:
 ``` shell
-wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/install.sh && bash install.sh
+wget https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/install.sh && bash install.sh
 ```
 脚本内生成配置处`订阅地址`为自建[sub-singbox](https://github.com/Toperlock/sing-box-subscribe)转换方案，默认为本人自用地址，如有需要可以在github里的`install-sing-box.sh`里`sub_host=`后自行修改替换
 
@@ -28,6 +28,6 @@ wget https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/insta
 
 增加写入快捷 方式：
 ``` shell
- wget -O /usr/bin/fake https://raw.githubusercontent.com/52shell/sing-box-mosdns-fakeip/main/fake.sh && chmod +x /usr/bin/fake
+ wget -O /usr/bin/fake https://raw.githubusercontent.com/herozmy/sing-box-mosdns-fakeip/main/fake.sh && chmod +x /usr/bin/fake
 ```
 之后更新核心配置。输入`fake`即可
