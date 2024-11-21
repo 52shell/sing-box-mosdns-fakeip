@@ -35,8 +35,7 @@ domain:office365.com
 domain:xiuxitong.com
 domain:pc528.net
 domain:pc521.net
-
-
+domain:trip.com
 
 
 domain:bing.com
