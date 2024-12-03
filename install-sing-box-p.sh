@@ -155,7 +155,7 @@ mkdir /etc/sing-box/providers
     "fakeip": {
       "enabled": true,
       "inet4_range": "28.0.0.0/8",
-      "inet6_range": "fc00::/18"
+      "inet6_range": "f2b0::/18"
     },
     "independent_cache": true,
     "lazy_cache": true,
