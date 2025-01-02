@@ -97,6 +97,16 @@ plugins:
   - tag: reject_blocklist
     type: sequence
     args:
+      - exec: query_summary reject_blockl
+
+  - tag: reject_3
+    type: sequence
+    args:
+      - exec: reject 3
+
+  - tag: reject_blocklist
+    type: sequence
+    args:
       - exec: query_summary reject_blocklist
       - exec: $reject_3
 
@@ -121,21 +131,37 @@ plugins:
   - tag: forward_local
     type: forward
     args:
-      concurrent: 2
+      concurrent: 3
       upstreams:
-        - addr: tls://223.5.5.5:853
-        #- addr: dc00::1007
-          enable_pipeline: false
-          insecure_skip_verify: false
-          idle_timeout: 50
-          enable_http3: false
+        - addr: "https://dns.alidns.com/dns-query"
+          dial_addr: "223.5.5.5"
+          insecure_skip_verify: true
+          enable_http3:
+        - addr: "quic://223.5.5.5"
+        - addr: "tcp://223.5.5.5"
+
 
   - tag: forward_remote
     type: forward
     args:
       concurrent: 1
       upstreams:
-        - addr: 10.10.10.147:6666
+       # - addr: 10.10.10.254:5353
+        #- addr: 10.10.10.114
+        - addr: tcp://127.0.0.1:5353
+          enable_pipeline: false
+          insecure_skip_verify: false
+          idle_timeout: 50
+          enable_http3: false
+
+  - tag: forward_google
+    type: forward
+    args:
+      concurrent: 1
+      upstreams:
+        - addr: tls://8.8.8.8:853
+        #- addr: 10.10.10.250
+        #- addr: tcp://10.10.10.250
           enable_pipeline: false
           insecure_skip_verify: false
           idle_timeout: 50
@@ -146,7 +172,7 @@ plugins:
     args:
       concurrent: 1
       upstreams:
-        - addr: tls://8.8.8.8:853
+        - addr: tls://1.1.1.1:853
           enable_pipeline: false
           insecure_skip_verify: false
           idle_timeout: 50
@@ -173,6 +199,12 @@ plugins:
     args:
       - exec: query_summary forward_remote
       - exec: $forward_remote
+
+  - tag: forward_google_upstream
+    type: sequence
+    args:
+      - exec: query_summary forward_google
+      - exec: $forward_google
 
   - tag: forward_cf_upstream
     type: sequence
@@ -201,7 +233,14 @@ plugins:
     args:
       - matches:
         - qtype 33
-        exec: $forward_cf_upstream
+        exec: $forward_google_upstream
+
+  - tag: query_is_mx_domain
+    type: sequence
+    args:
+      - matches:
+        - qtype 15
+        exec: $forward_google_upstream
 
   - tag: query_is_local_domain
     type: sequence
@@ -244,9 +283,13 @@ plugins:
   - tag: fallback_sequence
     type: sequence
     args:
-      - exec: $ecs_local
-      - exec: $forward_cf_upstream
+      #- exec: $ecs_local
+      - exec: $forward_google_upstream
       - matches: "rcode 2"
+        exec: goto local_sequence
+      - matches: "rcode 3"
+        exec: goto forward_cf_upstream
+      - matches: "rcode 5"
         exec: goto local_sequence
       - matches: "resp_ip $geoip_cn"
         exec: goto local_sequence
@@ -272,7 +315,9 @@ plugins:
       - exec: $query_is_ddns_domain
       - exec: jump has_resp_sequence
       - exec: $query_is_srv_domain
-      - exec: jump has_resp_sequence	  
+      - exec: jump has_resp_sequence
+      - exec: $query_is_mx_domain
+      - exec: jump has_resp_sequence
       - exec: $query_is_whitelist_domain
       - exec: jump has_resp_sequence
       - exec: $query_is_reject_domain
